@@ -13,6 +13,10 @@ export const getCars = (): Car[] => {
     return cars;
 };
 
+export const getCarById = (id: number): Car | undefined => {
+    return cars.find(car => car.getId() === id);
+};
+
 export const addCar = (car: Car): Car => {
     cars.push(car);
     return car;
@@ -20,5 +24,6 @@ export const addCar = (car: Car): Car => {
 
 export default {
     getCars,
+    getCarById,
     addCar,
 };

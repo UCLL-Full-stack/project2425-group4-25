@@ -19,10 +19,38 @@ const carRouter = express.Router();
  *                items:
  *                  $ref: '#/components/schemas/Car'
  */
-carRouter.get('/', (req: Request, res: Response, next: NextFunction) => {
+carRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const cars = carService.getAllCars();
+        const cars = await carService.getAllCars();
         res.status(200).json(cars);
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @swagger
+ * /cars/{id}:
+ *  get:
+ *      summary: Get car by ID
+ *      description: Returns details of a specific car by ID.
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          schema:
+ *            type: integer
+ *          description: The car ID
+ *      responses:
+ *         200:
+ *           description: Car details returned successfully
+ *         404:
+ *           description: Car not found
+ */
+carRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const car = await carService.getCarById(Number(req.params.id));
+        res.status(200).json(car);
     } catch (error) {
         next(error);
     }
