@@ -85,16 +85,17 @@ carRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =>
  */
 carRouter.post('/', (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { id, brand, electric, color } = req.body;
-        if (!id || !brand || typeof electric !== 'boolean' || !color) {
+        const { brand, electric, color } = req.body;
+        if (!brand || typeof electric !== 'boolean' || !color) {
             res.status(400).json({ message: 'Invalid input data' });
             return;
         }
-        const newCar = carService.createCar(id, brand, electric, color);
+        const newCar = carService.createCar(color, electric, brand);
         res.status(201).json(newCar);
     } catch (error) {
         next(error);
     }
 });
+
 
 export { carRouter };

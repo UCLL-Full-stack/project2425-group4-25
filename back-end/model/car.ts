@@ -1,13 +1,13 @@
 import { Maintenance } from './maintenance';
 
 export class Car {
-    private id: number;
+    private id?: number; // `id` is optional and will be generated automatically
     private color: string;
     private electric: boolean;
     private brand: string;
     private maintenances: Maintenance[];
 
-    constructor(id: number, color: string, electric: boolean, brand: string, maintenances: Maintenance[] = []) {
+    constructor(color: string, electric: boolean, brand: string, maintenances: Maintenance[] = [], id?: number) {
         this.id = id;
         this.color = color;
         this.electric = electric;
@@ -15,7 +15,7 @@ export class Car {
         this.maintenances = maintenances;
     }
 
-    getId(): number {
+    getId(): number | undefined {
         return this.id;
     }
 

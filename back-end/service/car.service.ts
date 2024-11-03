@@ -17,8 +17,8 @@ const getCarById = (id: number): Car => {
     return car;
 };
 
-const createCar = (id: number, color: string, electric: boolean, brand: string): Car => {
-    const newCar = new Car(id, color, electric, brand);
+const createCar = (color: string, electric: boolean, brand: string): Car => {
+    const newCar = new Car(color, electric, brand);
     return CarRepository.addCar(newCar);
 };
 
