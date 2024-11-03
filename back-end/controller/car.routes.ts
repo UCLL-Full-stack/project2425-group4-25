@@ -1,18 +1,14 @@
-import express, {Request, Response, NextFunction} from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import carService from '../service/car.service';
 
 const carRouter = express.Router();
-
-
 
 /**
  * @swagger
  * /cars:
  *  get:
  *      summary: Get a list of all cars
- *      description: Returns a JSON array of cars, each item in the array is an object that represents a car, wich includes the car's id, make, model, and year.
- *      security:
- *       - bearerAuth: []
+ *      description: Returns a JSON array of cars, each item in the array is an object that represents a car with details.
  *      responses:
  *         200:
  *           description: A JSON array of cars
@@ -25,9 +21,50 @@ const carRouter = express.Router();
  */
 carRouter.get('/', (req: Request, res: Response, next: NextFunction) => {
     try {
-        const cars = carService.getCars();
+        const cars = carService.getAllCars();
         res.status(200).json(cars);
-    } catch (error){
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @swagger
+ * /cars:
+ *  post:
+ *      summary: Create a new car
+ *      description: Adds a new car to the list
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: integer
+ *                brand:
+ *                  type: string
+ *                electric:
+ *                  type: boolean
+ *                color:
+ *                  type: string
+ *      responses:
+ *         201:
+ *           description: Car created successfully
+ *         400:
+ *           description: Invalid input data
+ */
+carRouter.post('/', (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id, brand, electric, color } = req.body;
+        if (!id || !brand || typeof electric !== 'boolean' || !color) {
+            res.status(400).json({ message: 'Invalid input data' });
+            return;
+        }
+        const newCar = carService.createCar(id, brand, electric, color);
+        res.status(201).json(newCar);
+    } catch (error) {
         next(error);
     }
 });

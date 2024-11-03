@@ -6,6 +6,7 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
 import { carRouter } from './controller/car.routes';
+import { maintenanceRouter } from './controller/maintenance.routes';
 
 const app = express();
 dotenv.config();
@@ -34,6 +35,7 @@ const swaggerSpec = swaggerJSDoc(swaggerOpts);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/cars', carRouter);
+app.use('/maintenances', maintenanceRouter);
 
 app.use((err: Error, req:Request, res: Response, next:NextFunction) => {
     console.error(err);

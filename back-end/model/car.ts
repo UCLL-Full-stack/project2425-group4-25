@@ -1,31 +1,43 @@
+import { Maintenance } from './maintenance';
+
 export class Car {
     private id: number;
-    private make: string;
-    private model: string;
-    private year: number;
+    private color: string;
+    private electric: boolean;
+    private brand: string;
+    private maintenances: Maintenance[];
 
-    constructor(id: number, make: string, model: string, year: number) {
+    constructor(id: number, color: string, electric: boolean, brand: string, maintenances: Maintenance[] = []) {
         this.id = id;
-        this.make = make;
-        this.model = model;
-        this.year = year;
+        this.color = color;
+        this.electric = electric;
+        this.brand = brand;
+        this.maintenances = maintenances;
     }
 
     getId(): number {
         return this.id;
     }
 
-    getMake(): string {
-        return this.make;
+    getColor(): string {
+        return this.color;
     }
 
-    getModel(): string {
-        return this.model;
+    isElectric(): boolean {
+        return this.electric;
     }
 
-    getYear(): number {
-        return this.year;
+    getBrand(): string {
+        return this.brand;
     }
 
-    
+    getMaintenances(): Maintenance[] {
+        return this.maintenances;
+    }
+
+    addMaintenance(maintenance: Maintenance): void {
+        if (!this.maintenances.includes(maintenance)) {
+            this.maintenances.push(maintenance);
+        }
+    }
 }
