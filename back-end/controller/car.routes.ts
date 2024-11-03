@@ -61,7 +61,7 @@ carRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =>
  * /cars:
  *  post:
  *      summary: Create a new car
- *      description: Adds a new car to the list
+ *      description: Adds a new car to the list with validation
  *      requestBody:
  *        required: true
  *        content:
@@ -69,8 +69,6 @@ carRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =>
  *            schema:
  *              type: object
  *              properties:
- *                id:
- *                  type: integer
  *                brand:
  *                  type: string
  *                electric:
@@ -86,10 +84,21 @@ carRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =>
 carRouter.post('/', (req: Request, res: Response, next: NextFunction) => {
     try {
         const { brand, electric, color } = req.body;
-        if (!brand || typeof electric !== 'boolean' || !color) {
-            res.status(400).json({ message: 'Invalid input data' });
+
+        // Basic validation checks
+        if (!brand || typeof brand !== 'string' || brand.trim() === '') {
+            res.status(400).json({ message: 'Invalid brand. Brand must be a non-empty string.' });
             return;
         }
+        if (typeof electric !== 'boolean') {
+            res.status(400).json({ message: 'Invalid electric field. Must be a boolean.' });
+            return;
+        }
+        if (!color || typeof color !== 'string' || color.trim() === '') {
+            res.status(400).json({ message: 'Invalid color. Color must be a non-empty string.' });
+            return;
+        }
+
         const newCar = carService.createCar(color, electric, brand);
         res.status(201).json(newCar);
     } catch (error) {

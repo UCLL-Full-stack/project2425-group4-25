@@ -13,6 +13,7 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose, onAdd }) => {
         color: '',
         electric: false,
     });
+    const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
@@ -24,12 +25,13 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose, onAdd }) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null); // Reset error before submitting
         try {
             const newCar = await CarService.addCar(carData);
             onAdd(newCar);
             onClose();
-        } catch (error) {
-            console.error('Error adding car:', error);
+        } catch (error: any) {
+            setError(error.message || 'Failed to add car.');
         }
     };
 
@@ -37,6 +39,7 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose, onAdd }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-6 rounded-lg w-96">
                 <h2 className="text-2xl mb-4">Add a New Car</h2>
+                {error && <p className="text-red-500 mb-4">{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label className="block mb-1">Brand</label>
