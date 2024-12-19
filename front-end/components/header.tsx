@@ -28,22 +28,24 @@ const Header: React.FC = () => {
                     <Link href="/" className="text-white hover:text-gray-300">
                         Home
                     </Link>
-                    <Link href="/garages" className="text-white hover:text-gray-300">
-                        Garages
-                    </Link>
-                    <Link href="/cars" className="text-white hover:text-gray-300">
-                        Cars
-                    </Link>
-                    <Link href="/maintenances" className="text-white hover:text-gray-300">
-                        Maintenances
-                    </Link>
                     {loggedInUser ? (
-                        <button
-                            onClick={handleLogout}
-                            className="text-white hover:text-gray-300 focus:outline-none"
-                        >
-                            Logout
-                        </button>
+                        <>
+                            <Link href="/garages" className="text-white hover:text-gray-300">
+                                Garages
+                            </Link>
+                            <Link href="/cars" className="text-white hover:text-gray-300">
+                                Cars
+                            </Link>
+                            <Link href="/maintenances" className="text-white hover:text-gray-300">
+                                Maintenances
+                            </Link>
+                            <button
+                                onClick={handleLogout}
+                                className="text-white hover:text-gray-300 focus:outline-none"
+                            >
+                                Logout
+                            </button>
+                        </>
                     ) : (
                         <Link href="/login" className="text-white hover:text-gray-300">
                             Login

@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Header from "@components/header";
 import UserLoginForm from "@components/users/UserLoginForm";
+import Link from "next/link";
 
 const Login: React.FC = () => {
     return (
@@ -15,6 +16,12 @@ const Login: React.FC = () => {
                         Enter your credentials to continue.
                     </p>
                     <UserLoginForm />
+                    <p className="mt-6 text-gray-400">
+                        Don’t have an account?{' '}
+                        <Link href="/signup" className="text-blue-500 hover:underline">
+                            Sign up here
+                        </Link>
+                    </p>
                 </section>
             </main>
         </>

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import MaintenanceOverviewTable from "../../components/maintenances/MaintenanceOverviewTable";
 import AddMaintenanceForm from "../../components/maintenances/AddMaintenanceForm";
 import MaintenanceService from "../../services/MaintenanceService";
 import { MaintenanceInput } from "../../types";
+import { useRouter } from "next/router";
 
 const fetcher = async () => {
     try {
@@ -17,7 +18,26 @@ const fetcher = async () => {
 
 const MaintenancesPage: React.FC = () => {
     const [isFormVisible, setIsFormVisible] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const { data: maintenances, mutate, error } = useSWR("/maintenances", fetcher, { revalidateOnFocus: false });
+    const router = useRouter();
+
+    useEffect(() => {
+        const token = sessionStorage.getItem('jwtToken');
+        if (token) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, []);
+
+    if (!isLoggedIn) {
+        return (
+            <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+                <h1 className="text-2xl font-bold">Please log in before visiting this page.</h1>
+            </div>
+        );
+    }
 
     const handleAddMaintenance = async (newMaintenance: MaintenanceInput) => {
         try {

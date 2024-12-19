@@ -51,6 +51,15 @@ export type User = {
     role?: string;
 };
 
+export type UserInput = {
+    firstName?: string;
+    lastName: string;
+    email: string;
+    username: string;
+    password: string;
+    role: string;
+};
+
 export type Garage = {
     id?: number;
     name: string;
@@ -65,3 +74,4 @@ export type GarageInput = {
     size: number;
     place: string;
 };
+
