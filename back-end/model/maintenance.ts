@@ -10,15 +10,7 @@ export class Maintenance {
     readonly duration: number;
     readonly cars: Car[];
 
-    constructor({
-        id,
-        type,
-        description,
-        cost,
-        date,
-        duration,
-        cars = [],
-    }: {
+    constructor(maintenance: {
         id?: number;
         type: string;
         description: string;
@@ -27,13 +19,40 @@ export class Maintenance {
         duration: number;
         cars?: Car[];
     }) {
-        this.id = id;
-        this.type = type;
-        this.description = description;
-        this.cost = cost;
-        this.date = date;
-        this.duration = duration;
-        this.cars = cars;
+        this.validate(maintenance);
+
+        this.id = maintenance.id;
+        this.type = maintenance.type;
+        this.description = maintenance.description;
+        this.cost = maintenance.cost;
+        this.date = maintenance.date;
+        this.duration = maintenance.duration;
+        this.cars = maintenance.cars ?? [];
+    }
+
+    validate(maintenance: {
+        type: string;
+        description: string;
+        cost: number;
+        date: Date;
+        duration: number;
+        cars?: Car[];
+    }) {
+        if (!maintenance.type) {
+            throw new Error('Type is required');
+        }
+        if (!maintenance.description) {
+            throw new Error('Description is required');
+        }
+        if (typeof maintenance.cost !== 'number' || maintenance.cost < 0) {
+            throw new Error('Cost must be a non-negative number');
+        }
+        if (!(maintenance.date instanceof Date)) {
+            throw new Error('Date must be a valid Date object');
+        }
+        if (typeof maintenance.duration !== 'number' || maintenance.duration < 0) {
+            throw new Error('Duration must be a non-negative number');
+        }
     }
 
     equals({
@@ -79,19 +98,4 @@ export class Maintenance {
             cars,
         });
     }
-
-    // addCar(car: Car): Maintenance {
-    //     if (this.cars.includes(car)) {
-    //         return this;
-    //     }
-    //     return new Maintenance({
-    //         id: this.id,
-    //         type: this.type,
-    //         description: this.description,
-    //         cost: this.cost,
-    //         date: this.date,
-    //         duration: this.duration,
-    //         cars: [...this.cars, car],
-    //     });
-    // }
 }

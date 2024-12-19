@@ -1,5 +1,10 @@
-import { Car as CarPrisma, Maintenance as MaintenancePrisma } from '@prisma/client';
+import {
+    Car as CarPrisma,
+    Maintenance as MaintenancePrisma,
+    User as UserPrisma,
+} from '@prisma/client';
 import { Maintenance } from './maintenance';
+import { User } from './user'; // Assuming you have a similar User model class
 
 export class Car {
     readonly id?: number;
@@ -8,28 +13,48 @@ export class Car {
     readonly brand: string;
     readonly garageId: number;
     readonly maintenances: Maintenance[];
+    readonly user?: User;
 
-    constructor({
-        id,
-        color,
-        electric,
-        brand,
-        garageId,
-        maintenances = [],
-    }: {
+    constructor(car: {
         id?: number;
         color: string;
         electric: boolean;
         brand: string;
         garageId: number;
         maintenances?: Maintenance[];
+        user?: User;
     }) {
-        this.id = id;
-        this.color = color;
-        this.electric = electric;
-        this.brand = brand;
-        this.garageId = garageId;
-        this.maintenances = maintenances;
+        this.validate(car);
+
+        this.id = car.id;
+        this.color = car.color;
+        this.electric = car.electric;
+        this.brand = car.brand;
+        this.garageId = car.garageId;
+        this.maintenances = car.maintenances ?? [];
+        this.user = car.user;
+    }
+
+    validate(car: {
+        color: string;
+        electric: boolean;
+        brand: string;
+        garageId: number;
+        maintenances?: Maintenance[];
+        user?: User;
+    }) {
+        if (!car.color) {
+            throw new Error('Color is required');
+        }
+        if (typeof car.electric !== 'boolean') {
+            throw new Error('Electric must be a boolean');
+        }
+        if (!car.brand) {
+            throw new Error('Brand is required');
+        }
+        if (!car.garageId) {
+            throw new Error('GarageId is required');
+        }
     }
 
     equals({
@@ -39,6 +64,7 @@ export class Car {
         brand,
         garageId,
         maintenances = [],
+        user,
     }: {
         id?: number;
         color: string;
@@ -46,6 +72,7 @@ export class Car {
         brand: string;
         garageId: number;
         maintenances?: Maintenance[];
+        user?: User;
     }): boolean {
         return (
             this.id === id &&
@@ -54,16 +81,20 @@ export class Car {
             this.brand === brand &&
             this.garageId === garageId &&
             this.maintenances.length === maintenances.length &&
-            this.maintenances.every((m, i) => m.equals(maintenances[i]))
+            this.maintenances.every((m, i) => m.equals(maintenances[i])) &&
+            ((this.user && user && this.user.equals(user)) || (!this.user && !user))
         );
     }
 
-    static from(
-        prismaCar: CarPrisma & { maintenances?: { maintenance: MaintenancePrisma }[] }
-    ): Car {
+    static from(prismaCar: CarPrisma & {
+        maintenances?: { maintenance: MaintenancePrisma }[];
+        user?: UserPrisma;
+    }): Car {
         const maintenances = prismaCar.maintenances?.map((m) =>
             Maintenance.from(m.maintenance)
         ) || [];
+
+        const user = prismaCar.user ? User.from(prismaCar.user) : undefined;
 
         return new Car({
             id: prismaCar.id,
@@ -72,19 +103,7 @@ export class Car {
             brand: prismaCar.brand,
             garageId: prismaCar.garageId,
             maintenances,
+            user,
         });
     }
-
-    // // If you need a method to add a maintenance, consider whether you want immutability.
-    // // For immutability, return a new Car instance with the updated array:
-    // addMaintenance(maintenance: Maintenance): Car {
-    //     return new Car({
-    //         id: this.id,
-    //         color: this.color,
-    //         electric: this.electric,
-    //         brand: this.brand,
-    //         garageId: this.garageId,
-    //         maintenances: [...this.maintenances, maintenance],
-    //     });
-    // }
 }
