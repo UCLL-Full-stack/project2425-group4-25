@@ -40,3 +40,18 @@ export type User = {
     password?: string;
     role?: string;
 };
+
+export type Garage = {
+    id?: number;
+    name: string;
+    size: number;
+    place: string;
+    cars: CarInput[];
+};
+
+export type GarageInput = {
+    id?: number;
+    name: string;
+    size: number;
+    place: string;
+};

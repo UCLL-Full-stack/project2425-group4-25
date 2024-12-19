@@ -19,11 +19,17 @@ const Header: React.FC = () => {
                     <Link href="/" className="text-white hover:text-gray-300">
                         Home
                     </Link>
+                    <Link href="/garages" className="text-white hover:text-gray-300">
+                        Garages
+                    </Link>
                     <Link href="/cars" className="text-white hover:text-gray-300">
                         Cars
                     </Link>
                     <Link href="/maintenances" className="text-white hover:text-gray-300">
                         Maintenances
+                    </Link>
+                    <Link href="/login" className="text-white hover:text-gray-300">
+                        Login
                     </Link>
                 </div>
             </nav>

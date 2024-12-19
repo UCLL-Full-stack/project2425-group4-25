@@ -7,6 +7,7 @@ import swaggerUi from 'swagger-ui-express';
 
 import { carRouter } from './controller/car.routes';
 import { maintenanceRouter } from './controller/maintenance.routes';
+import { garageRouter } from './controller/garage.routes';
 
 const app = express();
 dotenv.config();
@@ -34,6 +35,7 @@ const swaggerOpts = {
 const swaggerSpec = swaggerJSDoc(swaggerOpts);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+app.use('/garages', garageRouter);
 app.use('/cars', carRouter);
 app.use('/maintenances', maintenanceRouter);
 
