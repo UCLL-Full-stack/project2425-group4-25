@@ -2,10 +2,28 @@ export type Maintenance = {
     id: number;
     type: string;
     description: string;
-    cost: number;
-    date: string; // ISO sting format
-    duration: number; //in hours
-}
+    cost: number; // Cost of the maintenance
+    date: string; // ISO string format for date-time
+    duration: number; // Duration in hours
+    cars: { // Associated cars
+        id: number;
+        color: string;
+        electric: boolean;
+        brand: string;
+        garageId?: number; // Garage the car belongs to
+    }[];
+};
+
+export type MaintenanceInput = {
+    id?: number; // Optional during creation
+    type: string;
+    description: string;
+    cost: number; // Cost of the maintenance
+    date: string; // ISO string format for input consistency
+    duration: number; // Duration in hours
+    carId: number; // car ID associated with the maintenance
+};
+
 
 export type Car = {
     id: number;
@@ -22,16 +40,6 @@ export type CarInput = {
     electric: boolean;
     brand: string;
     garageId?: number; // Associated garage
-};
-
-export type MaintenanceInput = {
-    id?: number;
-    type: string;
-    description: string;
-    cost: number;
-    date: Date;
-    duration: number; // Duration in hours
-    cars: CarInput[]; // Associated cars
 };
 
 export type User = {
