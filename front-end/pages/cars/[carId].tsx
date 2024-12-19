@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import CarDetails from '../../components/cars/CarDetails';
 import { useRouter } from 'next/router';
+import { GetStaticProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const CarDetailsPage: React.FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,5 +28,11 @@ const CarDetailsPage: React.FC = () => {
 
     return <CarDetails />;
 };
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale || 'en', ['common'])),
+    },
+});
 
 export default CarDetailsPage;

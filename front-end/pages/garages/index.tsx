@@ -5,6 +5,8 @@ import AddGarageForm from '../../components/garages/AddGarageForm';
 import GarageService from '../../services/GarageService';
 import { Garage, GarageInput } from '../../types';
 import { useRouter } from 'next/router';
+import { GetStaticProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const fetcher = async () => {
     try {
@@ -92,5 +94,9 @@ const GaragesPage: React.FC = () => {
         </div>
     );
 };
-
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale || 'en', ['common'])),
+    },
+});
 export default GaragesPage;

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import MaintenanceDetails from "@components/maintenances/MaintenanceDetails";
 import { useRouter } from "next/router";
+import { GetStaticProps } from "next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 
 const MaintenanceDetailsPage: React.FC = () => {
@@ -25,5 +27,9 @@ const MaintenanceDetailsPage: React.FC = () => {
     }
     return <MaintenanceDetails />;
 }
-
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale || 'en', ['common'])),
+    },
+});
 export default MaintenanceDetailsPage;

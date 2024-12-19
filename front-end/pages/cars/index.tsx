@@ -5,6 +5,8 @@ import AddCarForm from '../../components/cars/AddCarForm';
 import CarService from '../../services/CarService';
 import { CarInput } from '../../types';
 import { useRouter } from 'next/router';
+import { GetStaticProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const fetcher = async () => {
     try {
@@ -78,5 +80,11 @@ const CarsPage: React.FC = () => {
         </div>
     );
 };
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale || 'en', ['common'])),
+    },
+});
 
 export default CarsPage;

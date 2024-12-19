@@ -1,0 +1,103 @@
+{
+    "app": {
+        "title": "Car Maintenance App"
+    },
+    "general": {
+        "error": "An error has occurred. Please try again later."
+    },
+    "header": {
+        "welcome": "Welcome",
+        "goodToSeeYou": "Good to see you, {{name}}!",
+        "nav": {
+            "home": "Home",
+            "garages": "Garages",
+            "cars"  : "Cars",
+            "maintenances": "Maintenances",
+            "login": "Login",
+            "logout": "Logout"
+        }
+    },
+    "language": {
+        "selector": {
+            "label": "Language"
+        },
+        "options": {
+                "en": "English",
+                "es": "Spanish"
+            }
+    },
+    "home": {
+        "hero": {
+            "backgroundAlt": "Hero Background",
+            "title": "Comprehensive Car Maintenance",
+            "subtitle": "Expert maintenance and service at our locations across Europe"
+        },
+        "stats": {
+            "locations": "Locations Across Europe",
+            "carsServiced": "Cars Serviced",
+            "years": "Years of Excellence"
+        },
+        "garages": {
+            "title": "Our Most Popular Garages",
+            "description": "We operate state-of-the-art garages in strategic locations to serve your needs efficiently.",
+            "size": "Size",
+            "place": "Place",
+            "noAvailable": "No garages available"
+        },
+        "values": {
+            "title": "Why Choose Us?",
+            "description": "At Banden Bekers-Bex, we provide exceptional maintenance services for all car models. Here's what sets us apart:",
+            "point1": "Expert mechanics with years of experience",
+            "point2": "Comprehensive car services at competitive prices",
+            "point3": "Convenient locations across Europe"
+        },
+        "userTable":{
+            "title": "Users",
+            "username": "Username",
+            "password": "Password",
+            "role": "Role"
+        }
+    },
+    "login": {
+        "title": "Login",
+        "description": "Enter your credentials to continue.",
+        "noAccount": "Don't have an account?",
+        "signupLink": "Sign up here.",
+        "button": "Login",
+        "error": "Invalid username or password. Please try again.",
+        "validate": {
+            "username": "Username is required",
+            "password": "Password is required"
+        },
+        "label": {
+            "username": "Username:",
+            "password": "Password:"
+        },
+        "placeholder": {
+            "username": "Enter your username",
+            "password": "Enter your password"
+        }
+    },
+    "signup": {
+        "title": "Sign Up",
+        "description": "Enter your information to create an account.",
+        "button": "Sign Up",
+        "success": "Signup successful! You can now log in.",
+        "errors": {
+            "requiredFields": "All fields are required.",
+            "failed": "Failed to sign up. Please try again."
+        },
+        "labels": {
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "email": "Email",
+            "username": "Username",
+            "password": "Password",
+            "role": "Role"
+        },
+        "roles": {
+            "customer": "Customer",
+            "employee": "Employee"
+        }
+    }
+}

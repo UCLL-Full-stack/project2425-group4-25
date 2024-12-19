@@ -5,6 +5,8 @@ import AddMaintenanceForm from "../../components/maintenances/AddMaintenanceForm
 import MaintenanceService from "../../services/MaintenanceService";
 import { MaintenanceInput } from "../../types";
 import { useRouter } from "next/router";
+import { GetStaticProps } from "next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const fetcher = async () => {
     try {
@@ -78,5 +80,9 @@ const MaintenancesPage: React.FC = () => {
         </div>
     );
 };
-
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale || 'en', ['common'])),
+    },
+});
 export default MaintenancesPage;

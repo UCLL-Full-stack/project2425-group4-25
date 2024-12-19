@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import GarageDetails from "@components/garages/GarageDetails";
 import { useRouter } from "next/router";
+import { GetStaticProps } from "next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const GarageDetailsPage: React.FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,5 +26,9 @@ const GarageDetailsPage: React.FC = () => {
     }
     return <GarageDetails />;
 }
-
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+    props: {
+        ...(await serverSideTranslations(locale || 'en', ['common'])),
+    },
+});
 export default GarageDetailsPage;

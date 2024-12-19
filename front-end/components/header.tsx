@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Language from './language/Language';
+import { useTranslation } from 'next-i18next';
 
 const Header: React.FC = () => {
     const [loggedInUser, setLoggedInUser] = React.useState<string | null>(null);
     const router = useRouter();
+    const { t } = useTranslation('common');
 
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
@@ -23,32 +26,36 @@ const Header: React.FC = () => {
     return (
         <header className="bg-black text-white p-4">
             <nav className="flex justify-between items-center">
-                <h2 className="text-lg font-bold">Welcome to Banden Bekers-Bex {loggedInUser ? `, good to see you ${loggedInUser}` : ''}</h2>
-                <div className="space-x-4">
+                <h2 className="text-lg font-bold">
+                    {t('header.welcome')} {loggedInUser ? `, ${t('header.goodToSeeYou', { name: loggedInUser })}` : ''}
+                </h2>
+                <div className="space-x-4 flex items-center">
+                    <Language />
                     <Link href="/" className="text-white hover:text-gray-300">
-                        Home
+                        {t('header.nav.home')}
                     </Link>
+                    
                     {loggedInUser ? (
                         <>
                             <Link href="/garages" className="text-white hover:text-gray-300">
-                                Garages
+                                {t('header.nav.garages')}
                             </Link>
                             <Link href="/cars" className="text-white hover:text-gray-300">
-                                Cars
+                                {t('header.nav.cars')}
                             </Link>
                             <Link href="/maintenances" className="text-white hover:text-gray-300">
-                                Maintenances
+                                {t('header.nav.maintenances')}
                             </Link>
                             <button
                                 onClick={handleLogout}
                                 className="text-white hover:text-gray-300 focus:outline-none"
                             >
-                                Logout
+                                {t('header.nav.logout')}
                             </button>
                         </>
                     ) : (
                         <Link href="/login" className="text-white hover:text-gray-300">
-                            Login
+                            {t('header.nav.login')}
                         </Link>
                     )}
                 </div>

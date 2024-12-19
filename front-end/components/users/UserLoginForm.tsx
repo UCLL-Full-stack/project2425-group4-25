@@ -1,7 +1,9 @@
 import { useState } from "react";
 import UserService from "../../services/UserService";
+import { useTranslation } from "next-i18next";
 
 const UserLoginForm: React.FC = () => {
+  const { t } = useTranslation("common");
   const [username, setUsername] = useState(""); // State for the username
   const [password, setPassword] = useState(""); // State for the password
   const [errorMessages, setErrorMessages] = useState<{ message: string; type: "success" | "error" }[]>([]); // State for status messages
@@ -15,14 +17,14 @@ const UserLoginForm: React.FC = () => {
     if (!username.trim()) {
       setErrorMessages((prev) => [
         ...prev,
-        { message: "Username is required", type: "error" },
+        { message: t("login.validate.username"), type: "error" },
       ]);
       isValid = false;
     }
     if (!password.trim()) {
       setErrorMessages((prev) => [
         ...prev,
-        { message: "Password is required", type: "error" },
+        { message: t("login.validate.password"), type: "error" },
       ]);
       isValid = false;
     }
@@ -44,7 +46,7 @@ const UserLoginForm: React.FC = () => {
       window.location.href = "/"; // Redirect to homepage
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Login failed. Please try again.";
+        error instanceof Error ? error.message : t("login.error");
       // Handle login failure
       setErrorMessages([
         { message: errorMessage, type: "error" },
@@ -55,7 +57,7 @@ const UserLoginForm: React.FC = () => {
   return (
     <div className="flex justify-center items-center px-4">
       <div className="bg-gray-900 p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h3 className="text-3xl font-bold text-center mb-6">Login</h3>
+        <h3 className="text-3xl font-bold text-center mb-6">{t("login.title")}</h3>
 
         {errorMessages.length > 0 && (
           <ul className="mb-4">
@@ -74,7 +76,7 @@ const UserLoginForm: React.FC = () => {
 
         <form onSubmit={handleSubmit}>
           <label htmlFor="usernameInput" className="block text-sm font-medium mb-2">
-            Username:
+            {t("login.label.username")}
           </label>
           <input
             id="usernameInput"
@@ -82,11 +84,11 @@ const UserLoginForm: React.FC = () => {
             value={username}
             onChange={(event) => setUsername(event.target.value)} // Update username state
             className="w-full p-3 rounded-lg text-black focus:ring-2 focus:ring-blue-600 mb-4"
-            placeholder="Enter your username"
+            placeholder={t("login.placeholder.username")}
           />
 
           <label htmlFor="passwordInput" className="block text-sm font-medium mb-2">
-            Password:
+            {t("login.label.password")}
           </label>
           <input
             id="passwordInput"
@@ -94,14 +96,14 @@ const UserLoginForm: React.FC = () => {
             value={password}
             onChange={(event) => setPassword(event.target.value)} // Update password state
             className="w-full p-3 rounded-lg text-black focus:ring-2 focus:ring-blue-600 mb-4"
-            placeholder="Enter your password"
+            placeholder={t("login.placeholder.password")}
           />
 
           <button
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium"
             type="submit"
           >
-            Login
+            {t("login.button")}
           </button>
         </form>
       </div>

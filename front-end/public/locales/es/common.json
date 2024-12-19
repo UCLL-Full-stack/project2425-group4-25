@@ -1,0 +1,103 @@
+{
+    "app": {
+        "title": "Aplicación de Mantenimiento de Automóviles"
+    },
+    "general": {
+        "error": "Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde."
+    },
+    "header": {
+        "welcome": "Bienvenido",
+        "goodToSeeYou": "¡Qué bueno verte, {{name}}!",
+        "nav": {
+            "home": "Inicio",
+            "garages": "Garajes",
+            "cars"  : "Coches",
+            "maintenances": "Mantenimientos",
+            "login": "Iniciar Sesión",
+            "logout": "Cerrar Sesión"
+        }
+    },
+    "language": {
+        "selector": {
+            "label": "Idioma"
+        },
+        "options": {
+            "en": "Inglés",
+            "es": "Español"
+        }
+    },
+    "home": {
+        "hero": {
+            "backgroundAlt": "Fondo del Héroe",
+            "title": "Mantenimiento Integral de Automóviles",
+            "subtitle": "Mantenimiento experto y servicio en nuestras ubicaciones por toda Europa"
+        },
+        "stats": {
+            "locations": "Ubicaciones en Toda Europa",
+            "carsServiced": "Coches Mantenidos",
+            "years": "Años de Excelencia"
+        },
+        "garages": {
+            "title": "Nuestros Garajes Más Populares",
+            "description": "Operamos garajes de última generación en ubicaciones estratégicas para satisfacer sus necesidades de manera eficiente.",
+            "size": "Tamaño",
+            "place": "Lugar",
+            "noAvailable": "No hay garajes disponibles"
+        },
+        "values": {
+            "title": "¿Por Qué Elegirnos?",
+            "description": "En Banden Bekers-Bex, brindamos servicios de mantenimiento excepcionales para todos los modelos de automóviles. Esto es lo que nos distingue:",
+            "point1": "Mecánicos expertos con años de experiencia",
+            "point2": "Servicios integrales de automóviles a precios competitivos",
+            "point3": "Ubicaciones convenientes en toda Europa"
+        },
+        "userTable":{
+            "title": "Usuarios",
+            "username": "Nombre de Usuario",
+            "password": "Contraseña",
+            "role": "Rol"
+        }
+    },
+    "login": {
+        "title": "Iniciar sesión",
+        "description": "Ingrese sus credenciales para continuar.",
+        "noAccount": "¿No tienes una cuenta?",
+        "signupLink": "Regístrate aquí.",
+        "button": "Iniciar Sesión",
+        "error": "Nombre de usuario o contraseña inválidos. Por favor, inténtelo de nuevo.",
+        "validate": {
+            "username": "Se requiere nombre de usuario",
+            "password": "Se requiere contraseña"
+        },
+        "label": {
+            "username": "Nombre de usuario:",
+            "password": "Contraseña:"
+        },
+        "placeholder": {
+            "username": "Introduzca su nombre de usuario",
+            "password": "Introduzca su contraseña"
+        }
+    },
+    "signup": {
+        "title": "Registrarse",
+        "description": "Complete el formulario para crear una cuenta.",
+        "button": "Registrarse",
+        "success": "Registro exitoso. Ahora puedes iniciar sesión.",
+        "errors": {
+            "requiredFields": "Todos los campos son obligatorios.",
+            "failed": "Error al registrarse. Por favor, inténtelo de nuevo."
+        },
+        "labels": {
+            "firstName": "Nombre",
+            "lastName": "Apellido",
+            "email": "Correo electrónico",
+            "username": "Nombre de usuario",
+            "password": "Contraseña",
+            "role": "Rol"
+        },
+        "roles": {
+            "customer": "Cliente",
+            "employee": "Empleado"
+        }
+    }
+}
