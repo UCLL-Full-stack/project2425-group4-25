@@ -1,28 +1,59 @@
-import express, { Request, Response, NextFunction } from 'express';
+/**
+ * @swagger
+ *   components:
+ *    schemas:
+ *      Maintenance:
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: number
+ *              format: int64
+ *            type:
+ *              type: string
+ *              description: Type of maintenance.
+ *            description:
+ *              type: string
+ *            cost:
+ *              type: number
+ *              format: float
+ *            date:
+ *              type: string
+ *              format: date-time
+ *            duration:
+ *              type: number
+ *              format: int32
+ *            cars:
+ *              type: array
+ *              items:
+ *                  $ref: '#/components/schemas/Car'
+ */
+
+import express, { NextFunction, Request, Response } from 'express';
 import maintenanceService from '../service/maintenance.service';
-import { getCars } from '../repository/car.db';
+import { MaintenanceInput } from '../types';
 
 const maintenanceRouter = express.Router();
 
 /**
  * @swagger
  * /maintenances:
- *  get:
- *      summary: Get a list of all maintenance records
- *      description: Returns a JSON array of maintenance records, each item representing a maintenance entry with its details.
- *      responses:
- *         200:
- *           description: A JSON array of maintenance records
- *           content:
- *             application/json:
- *              schema:
- *                type: array
- *                items:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Get a list of all maintenances.
+ *     responses:
+ *       200:
+ *         description: A list of maintenances.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
  *                  $ref: '#/components/schemas/Maintenance'
  */
-maintenanceRouter.get('/', (req: Request, res: Response, next: NextFunction) => {
+maintenanceRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const maintenances = maintenanceService.getAllMaintenances();
+        const maintenances = await maintenanceService.getAllMaintenances();
         res.status(200).json(maintenances);
     } catch (error) {
         next(error);
@@ -31,51 +62,73 @@ maintenanceRouter.get('/', (req: Request, res: Response, next: NextFunction) => 
 
 /**
  * @swagger
- * /maintenances:
- *  post:
- *      summary: Create a new maintenance record
- *      description: Adds a new maintenance record to the list
- *      requestBody:
- *        required: true
- *        content:
- *          application/json:
+ * /maintenances/{id}:
+ *  get:
+ *      security:
+ *         - bearerAuth: []
+ *      summary: Get a maintenance by id.
+ *      parameters:
+ *          - in: path
+ *            name: id
  *            schema:
- *              type: object
- *              properties:
- *                id:
- *                  type: integer
- *                type:
- *                  type: string
- *                description:
- *                  type: string
- *                cost:
- *                  type: number
- *                date:
- *                  type: string
- *                  format: date
- *                duration:
- *                  type: number
- *                carId:
- *                  type: integer
+ *              type: integer
+ *              required: true
+ *              description: The maintenance id.
  *      responses:
- *         201:
- *           description: Maintenance record created successfully
- *         400:
- *           description: Invalid input data
+ *          200:
+ *              description: A maintenance object.
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Maintenance'
  */
-maintenanceRouter.post('/', (req: Request, res: Response, next: NextFunction) => {
+maintenanceRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { id, type, description, cost, date, duration, carId } = req.body;
-        const cars = getCars();
-        const car = cars.find(c => c.getId() === carId);
-        
-        if (!id || !type || !description || !cost || !date || !duration || !car) {
-            res.status(400).json({ message: 'Invalid input data' });
-            return;
-        }
+        const maintenance = await maintenanceService.getMaintenanceById(Number(req.params.id));
+        res.status(200).json(maintenance);
+    } catch (error) {
+        next(error);
+    }
+});
 
-        const newMaintenance = maintenanceService.createMaintenance(id, type, description, cost, new Date(date), duration, cars);
-        res.status(201).json(newMaintenance);
+/**
+ * @swagger
+ * /maintenances:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Create a new maintenance record.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               type:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               cost:
+ *                 type: number
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *               duration:
+ *                 type: number
+ *     responses:
+ *       201:
+ *         description: The created maintenance record.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Maintenance'
+ */
+maintenanceRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const maintenance = <MaintenanceInput>req.body;
+        const result = await maintenanceService.createMaintenance(maintenance);
+        res.status(201).json(result);
     } catch (error) {
         next(error);
     }

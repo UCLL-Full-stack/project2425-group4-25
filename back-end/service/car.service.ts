@@ -1,39 +1,23 @@
-import { Car } from "../model/car";
-import CarRepository from "../repository/car.db";
+import carDB from '../repository/car.db';
+import { Car } from '../model/car';
+import { CarInput } from '../types';
 
-const validateCarData = (color: string, electric: boolean, brand: string): void => {
-    if (typeof brand !== 'string' || brand.trim() === '') {
-        throw new Error('Invalid brand. Brand must be a non-empty string.');
-    }
-    if (typeof electric !== 'boolean') {
-        throw new Error('Invalid electric field. Must be a boolean.');
-    }
-    if (typeof color !== 'string' || color.trim() === '') {
-        throw new Error('Invalid color. Color must be a non-empty string.');
-    }
+const getAllCars = async (): Promise<Car[]> => {
+    return carDB.getAllCars();
 };
 
-const getAllCars = (): Car[] => {
-    const cars = CarRepository.getCars();
-    if (cars.length === 0) {
-        throw new Error("No cars found");
-    }
-    return cars;
-};
-
-const getCarById = (id: number): Car => {
-    const car = CarRepository.getCarById(id);
-    if (!car) {
-        throw new Error(`Car with ID ${id} not found`);
-    }
+const getCarById = async (id: number): Promise<Car> => {
+    const car = await carDB.getCarById({ id });
+    if (!car) throw new Error(`Car with id ${id} does not exist.`);
     return car;
 };
 
-const createCar = (color: string, electric: boolean, brand: string): Car => {
-    validateCarData(color, electric, brand); // Call the validation function
-
-    const newCar = new Car(color, electric, brand);
-    return CarRepository.addCar(newCar);
+const createCar = async ({color , electric , brand , garageId }: CarInput): Promise<Car> => {
+    return carDB.createCar({ color, electric, brand, garageId });
 };
 
-export default { getAllCars, getCarById, createCar };
+export default {
+    getAllCars,
+    getCarById,
+    createCar,
+};

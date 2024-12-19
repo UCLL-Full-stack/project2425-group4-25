@@ -2,54 +2,52 @@
  * @swagger
  *   components:
  *    schemas:
- *      Car:
+ *      Garage:
  *          type: object
  *          properties:
  *            id:
  *              type: number
  *              format: int64
- *            color:
+ *            name:
  *              type: string
- *            electric:
- *              type: boolean
- *            brand:
- *              type: string
- *            garageId:
+ *            size:
  *              type: number
  *              format: int64
- *            maintenances:
+ *            place:
+ *              type: string
+ *            cars:
  *              type: array
  *              items:
- *                  $ref: '#/components/schemas/Maintenance'
+ *                  $ref: '#/components/schemas/Car'
  */
 
 import express, { NextFunction, Request, Response } from 'express';
-import carService from '../service/car.service';
-import { CarInput } from '../types';
+import garageService from '../service/garage.service';
+import { GarageInput } from '../types';
 
-const carRouter = express.Router();
+const garageRouter = express.Router();
 
 /**
  * @swagger
- * /cars:
+ * /garages:
  *   get:
  *     security:
  *       - bearerAuth: []
- *     summary: Get a list of all cars.
+ *     summary: Get a list of all garages.
  *     responses:
  *       200:
- *         description: A list of cars.
+ *         description: A list of garages.
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                  $ref: '#/components/schemas/Car'
+ *                  $ref: '#/components/schemas/Garage'
  */
-carRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
+garageRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const cars = await carService.getAllCars();
-        res.status(200).json(cars);
+        const garages = await garageService.getAllGarages();
+        res.status(200).json(garages);
     } catch (error) {
         next(error);
     }
@@ -57,30 +55,30 @@ carRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
 
 /**
  * @swagger
- * /cars/{id}:
+ * /garages/{id}:
  *  get:
  *      security:
  *         - bearerAuth: []
- *      summary: Get a car by id.
+ *      summary: Get a garage by id.
  *      parameters:
  *          - in: path
  *            name: id
  *            schema:
  *              type: integer
  *              required: true
- *              description: The car id.
+ *              description: The garage id.
  *      responses:
  *          200:
- *              description: A car object.
+ *              description: A garage object.
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/Car'
+ *                          $ref: '#/components/schemas/Garage'
  */
-carRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+garageRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const car = await carService.getCarById(Number(req.params.id));
-        res.status(200).json(car);
+        const garage = await garageService.getGarageById(Number(req.params.id));
+        res.status(200).json(garage);
     } catch (error) {
         next(error);
     }
@@ -88,11 +86,11 @@ carRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =>
 
 /**
  * @swagger
- * /cars:
+ * /garages:
  *   post:
  *     security:
  *       - bearerAuth: []
- *     summary: Create a new car.
+ *     summary: Create a new garage.
  *     requestBody:
  *       required: true
  *       content:
@@ -100,31 +98,28 @@ carRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =>
  *           schema:
  *             type: object
  *             properties:
- *               color:
+ *               name:
  *                 type: string
- *               electric:
- *                 type: boolean
- *               brand:
- *                 type: string
- *               garageId:
+ *               size:
  *                 type: number
- *                 format: int64
+ *               place:
+ *                 type: string
  *     responses:
  *       201:
- *         description: The created car.
+ *         description: The created garage.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Car'
+ *               $ref: '#/components/schemas/Garage'
  */
-carRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
+garageRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const car = <CarInput>req.body;
-        const result = await carService.createCar(car);
+        const garage = <GarageInput>req.body;
+        const result = await garageService.createGarage(garage);
         res.status(201).json(result);
     } catch (error) {
         next(error);
     }
 });
 
-export { carRouter };
+export { garageRouter };

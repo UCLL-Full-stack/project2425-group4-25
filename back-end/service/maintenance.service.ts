@@ -1,26 +1,36 @@
-import { Maintenance } from "../model/maintenance";
-import MaintenanceRepository from "../repository/maintenance.db";
-import { Car } from "../model/car";
+import maintenanceDB from '../repository/maintenance.db';
+import { Maintenance } from '../model/maintenance';
+import { MaintenanceInput } from '../types';
 
-const getAllMaintenances = (): Maintenance[] => {
-    const maintenances = MaintenanceRepository.getMaintenances();
-    if (maintenances.length === 0) {
-        throw new Error("No maintenances found");
-    }
-    return maintenances;
+const getAllMaintenances = async (): Promise<Maintenance[]> => {
+    return maintenanceDB.getAllMaintenances();
 };
 
-const getMaintenancesForCar = (carId: number): Maintenance[] => {
-    const maintenances = MaintenanceRepository.getMaintenancesByCarId(carId);
-    if (maintenances.length === 0) {
-        throw new Error(`No maintenances found for car ID ${carId}`);
-    }
-    return maintenances;
+const getMaintenanceById = async (id: number): Promise<Maintenance> => {
+    const maintenance = await maintenanceDB.getMaintenanceById({ id });
+    if (!maintenance) throw new Error(`Maintenance with id ${id} does not exist.`);
+    return maintenance;
 };
 
-const createMaintenance = (id: number, type: string, description: string, cost: number, date: Date, duration: number, cars: Car[]): Maintenance => {
-    const newMaintenance = new Maintenance(id, type, description, cost, date, duration, cars);
-    return MaintenanceRepository.addMaintenance(newMaintenance);
+const createMaintenance = async (
+    {type,
+    description,
+    cost,
+    date,
+    duration}: MaintenanceInput
+): Promise<Maintenance> => {
+    return maintenanceDB.createMaintenance(new Maintenance({
+        type,
+        description,
+        cost,
+        date,
+        duration,
+        cars: [],
+    }));
 };
 
-export default { getAllMaintenances, getMaintenancesForCar, createMaintenance };
+export default {
+    getAllMaintenances,
+    getMaintenanceById,
+    createMaintenance,
+};

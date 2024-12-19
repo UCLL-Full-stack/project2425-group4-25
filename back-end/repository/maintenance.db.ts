@@ -1,28 +1,58 @@
-import { Maintenance } from "../model/maintenance";
-import { Car } from "../model/car";
+import database from '../util/database';
+import { Maintenance } from '../model/maintenance';
 
-// Initialize with empty arrays to avoid direct imports that create circular dependencies
-const maintenances: Maintenance[] = [
-    new Maintenance(1, "Oil Change", "Routine oil change", 50, new Date('2023-06-01'), 1),
-    new Maintenance(2, "Tire Replacement", "Replaced all four tires", 400, new Date('2023-07-15'), 3),
-    new Maintenance(3, "Brake Pad Replacement", "Replaced front brake pads", 150, new Date('2023-08-20'), 2),
-];
-
-export const getMaintenances = (): Maintenance[] => {
-    return maintenances;
+const createMaintenance = async ({ type, description, cost, date, duration }: Maintenance): Promise<Maintenance> => {
+    try {
+        const maintenancePrisma = await database.maintenance.create({
+            data: {
+                type: type,
+                description: description,
+                cost: cost,
+                date: date,
+                duration: duration,
+            },
+            include: {
+                cars: { include: { car: true } }
+            }
+        });
+        return Maintenance.from(maintenancePrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
 };
 
-export const getMaintenancesByCarId = (carId: number): Maintenance[] => {
-    return maintenances.filter(m => m.getCars().some(c => c.getId() === carId));
+const getMaintenanceById = async ({ id }: { id: number }): Promise<Maintenance | null> => {
+    try {
+        const maintenancePrisma = await database.maintenance.findUnique({
+            where: { id },
+            include: {
+                cars: { include: { car: true } }
+            }
+        });
+        return maintenancePrisma ? Maintenance.from(maintenancePrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
 };
 
-export const addMaintenance = (maintenance: Maintenance): Maintenance => {
-    maintenances.push(maintenance);
-    return maintenance;
+const getAllMaintenances = async (): Promise<Maintenance[]> => {
+    try {
+        const maintenancesPrisma = await database.maintenance.findMany({
+            include: {
+                cars: { include: { car: true } }
+            }
+        });
+        return maintenancesPrisma.map((m) => Maintenance.from(m));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
 };
 
 export default {
-    getMaintenances,
-    getMaintenancesByCarId,
-    addMaintenance,
+    createMaintenance,
+    getMaintenanceById,
+    getAllMaintenances,
 };
