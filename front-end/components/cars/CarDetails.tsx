@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import CarService from '../../services/CarService';
-import { Car, Maintenance } from '../../types'; // Ensure you have these types defined
+import GarageService from '../../services/GarageService';
+import { Car, Maintenance, Garage } from '../../types';
 
 const CarDetails: React.FC = () => {
     const [car, setCar] = useState<Car | null>(null);
+    const [garage, setGarage] = useState<Garage | null>(null);
     const router = useRouter();
     const { carId } = router.query;
 
@@ -14,8 +16,13 @@ const CarDetails: React.FC = () => {
                 try {
                     const carData = await CarService.getCarById(carId as string);
                     setCar(carData);
+
+                    if (carData.garageId) {
+                        const garageData = await GarageService.getGarageById(carData.garageId);
+                        setGarage(garageData);
+                    }
                 } catch (error) {
-                    console.error('Error fetching car details:', error);
+                    console.error('Error fetching car or garage details:', error);
                 }
             };
             fetchCarDetails();
@@ -34,6 +41,14 @@ const CarDetails: React.FC = () => {
                 <p><strong>Brand:</strong> {car.brand}</p>
                 <p><strong>Color:</strong> {car.color}</p>
                 <p><strong>Electric:</strong> {car.electric ? 'Yes' : 'No'}</p>
+                {garage && (
+                    <div className="mt-4">
+                        <h3 className="text-xl font-bold">Garage Information</h3>
+                        <p><strong>Name:</strong> {garage.name}</p>
+                        <p><strong>Size:</strong> {garage.size}</p>
+                        <p><strong>Place:</strong> {garage.place}</p>
+                    </div>
+                )}
             </div>
 
             <h3 className="text-2xl font-bold mb-4">Maintenances</h3>
@@ -51,7 +66,7 @@ const CarDetails: React.FC = () => {
                     <tbody>
                         {car.maintenances.length > 0 ? (
                             car.maintenances.map((maintenance, index) => (
-                                <tr key={index} className="hover:bg-gray-700 border-b border-gray-600">
+                                <tr key={index} className="hover:bg-gray-700 border-b border-gray-600" onClick={() => router.push(`/maintenances/${maintenance.id}`)}>
                                     <td className="px-4 py-2">{maintenance.type}</td>
                                     <td className="px-4 py-2">{maintenance.description}</td>
                                     <td className="px-4 py-2">${maintenance.cost}</td>
