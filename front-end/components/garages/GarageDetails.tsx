@@ -51,7 +51,7 @@ const GarageDetails: React.FC = () => {
                     <tbody>
                         {garage.cars.length > 0 ? (
                             garage.cars.map((car) => (
-                                <tr key={car.id} className="hover:bg-gray-700 border-b border-gray-600">
+                                <tr key={car.id} className="hover:bg-gray-700 border-b border-gray-600" onClick={() => router.push(`/cars/${car.id}`)}>
                                     <td className="px-4 py-2">{car.id}</td>
                                     <td className="px-4 py-2">{car.brand}</td>
                                     <td className="px-4 py-2">{car.color}</td>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Garage } from "@types";
-import Link from "next/link";
+import router from "next/router";
 
 interface GarageOverviewTableProps {
     garages: Garage[];
@@ -24,7 +24,7 @@ const GarageOverviewTable: React.FC<GarageOverviewTableProps> = ({ garages }) =>
                     <tbody>
                         {garages.length > 0 ? (
                             garages.map((garage) => (
-                                <tr key={garage.id} className="hover:bg-gray-700 border-b border-gray-600 cursor-pointer" onClick={() => window.location.href = `/garages/${garage.id}`}>
+                                <tr key={garage.id} className="hover:bg-gray-700 border-b border-gray-600 cursor-pointer" onClick={() => router.push(`/garages/${garage.id}`)}>
                                     <td className="px-4 py-2">{garage.id}</td>
                                     <td className="px-4 py-2">{garage.name}</td>
                                     <td className="px-4 py-2">{garage.size}</td>

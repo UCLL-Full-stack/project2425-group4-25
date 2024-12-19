@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { CarInput } from '../../types';
+import router from 'next/router';
 
 interface CarOverviewTableProps {
     cars: CarInput[];
@@ -18,12 +19,11 @@ const CarOverviewTable: React.FC<CarOverviewTableProps> = ({ cars }) => {
                             <th className="px-4 py-2">Brand</th>
                             <th className="px-4 py-2">Color</th>
                             <th className="px-4 py-2">Electric</th>
-                            <th className="px-4 py-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {cars.map((car) => (
-                            <tr key={car.id} className="hover:bg-gray-700 border-b border-gray-600">
+                            <tr key={car.id} className="hover:bg-gray-700 border-b border-gray-600" onClick={() => router.push(`/cars/${car.id}`)}>
                                 <td className="px-4 py-2">{car.id}</td>
                                 <td className="px-4 py-2">{car.brand}</td>
                                 <td className="px-4 py-2">{car.color}</td>
@@ -35,13 +35,6 @@ const CarOverviewTable: React.FC<CarOverviewTableProps> = ({ cars }) => {
                                     >
                                         {car.electric ? 'Yes' : 'No'}
                                     </span>
-                                </td>
-                                <td className="px-4 py-2">
-                                    <Link href={`/cars/${car.id}`}>
-                                        <button className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition duration-150">
-                                            Details
-                                        </button>
-                                    </Link>
                                 </td>
                             </tr>
                         ))}

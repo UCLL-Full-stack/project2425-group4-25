@@ -12,6 +12,7 @@ export type Car = {
     brand: string;
     color: string;
     electric: boolean;
+    garageId: number; // Associated garage
     maintenances: Maintenance[]; // array of associated maintenances
 };
 
@@ -20,6 +21,7 @@ export type CarInput = {
     color: string;
     electric: boolean;
     brand: string;
+    garageId?: number; // Associated garage
 };
 
 export type MaintenanceInput = {
