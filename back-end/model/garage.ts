@@ -8,24 +8,32 @@ export class Garage {
     readonly place: string;
     readonly cars: Car[];
 
-    constructor({
-        id,
-        name,
-        size,
-        place,
-        cars = [],
-    }: {
+    constructor(garage: {
         id?: number;
         name: string;
         size: number;
         place: string;
         cars?: Car[];
     }) {
-        this.id = id;
-        this.name = name;
-        this.size = size;
-        this.place = place;
-        this.cars = cars;
+        this.validate(garage);
+
+        this.id = garage.id;
+        this.name = garage.name;
+        this.size = garage.size;
+        this.place = garage.place;
+        this.cars = garage.cars ?? [];
+    }
+
+    validate(garage: { name: string; size: number; place: string; cars?: Car[] }) {
+        if (!garage.name) {
+            throw new Error('Name is required');
+        }
+        if (typeof garage.size !== 'number' || garage.size <= 0) {
+            throw new Error('Size must be a positive number');
+        }
+        if (!garage.place) {
+            throw new Error('Place is required');
+        }
     }
 
     equals({
@@ -52,7 +60,9 @@ export class Garage {
     }
 
     static from(
-        prismaGarage: GaragePrisma & { cars?: (CarPrisma & { maintenances?: { maintenance: any }[] })[] }
+        prismaGarage: GaragePrisma & {
+            cars?: (CarPrisma & { maintenances?: { maintenance: any }[] })[];
+        }
     ): Garage {
         const cars = prismaGarage.cars?.map((c) => Car.from(c)) || [];
         return new Garage({
@@ -63,19 +73,4 @@ export class Garage {
             cars,
         });
     }
-
-    // // If needed, you can add methods that return new instances rather than mutating, 
-    // // to maintain an immutable approach.
-    // addCar(car: Car): Garage {
-    //     if (this.cars.includes(car)) {
-    //         return this;
-    //     }
-    //     return new Garage({
-    //         id: this.id,
-    //         name: this.name,
-    //         size: this.size,
-    //         place: this.place,
-    //         cars: [...this.cars, car],
-    //     });
-    // }
 }
