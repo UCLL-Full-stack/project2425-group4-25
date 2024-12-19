@@ -1,8 +1,10 @@
-import React, { use, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 const Header: React.FC = () => {
     const [loggedInUser, setLoggedInUser] = React.useState<string | null>(null);
+    const router = useRouter();
 
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
@@ -10,7 +12,14 @@ const Header: React.FC = () => {
             setLoggedInUser(user);
         }
     }, []);
-    
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('loggedInUser');
+        sessionStorage.removeItem('jwtToken'); // Remove JWT token
+        setLoggedInUser(null);
+        router.push('/'); // Redirect to home page
+    };
+
     return (
         <header className="bg-black text-white p-4">
             <nav className="flex justify-between items-center">
@@ -28,9 +37,18 @@ const Header: React.FC = () => {
                     <Link href="/maintenances" className="text-white hover:text-gray-300">
                         Maintenances
                     </Link>
-                    <Link href="/login" className="text-white hover:text-gray-300">
-                        Login
-                    </Link>
+                    {loggedInUser ? (
+                        <button
+                            onClick={handleLogout}
+                            className="text-white hover:text-gray-300 focus:outline-none"
+                        >
+                            Logout
+                        </button>
+                    ) : (
+                        <Link href="/login" className="text-white hover:text-gray-300">
+                            Login
+                        </Link>
+                    )}
                 </div>
             </nav>
         </header>

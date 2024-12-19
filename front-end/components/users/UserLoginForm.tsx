@@ -53,7 +53,7 @@ const UserLoginForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
+    <div className="flex justify-center items-center px-4">
       <div className="bg-gray-900 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h3 className="text-3xl font-bold text-center mb-6">Login</h3>
 

@@ -1,29 +1,44 @@
-import React, {useState, useEffect} from "react";
-import MaintenanceOverviewtable from "../../components/maintenances/MaintenanceOverviewTable";
+import React, { useState } from "react";
+import useSWR from "swr";
+import MaintenanceOverviewTable from "../../components/maintenances/MaintenanceOverviewTable";
 import AddMaintenanceForm from "../../components/maintenances/AddMaintenanceForm";
 import MaintenanceService from "../../services/MaintenanceService";
-import {MaintenanceInput} from "../../types";
+import { MaintenanceInput } from "../../types";
+
+const fetcher = async () => {
+    try {
+        const maintenances = await MaintenanceService.getAllMaintenances();
+        return maintenances;
+    } catch (error) {
+        console.error("Error fetching maintenances:", error);
+        throw error;
+    }
+};
 
 const MaintenancesPage: React.FC = () => {
     const [isFormVisible, setIsFormVisible] = useState(false);
-    const [maintenances, setMaintenances] = useState<MaintenanceInput[]>([]);
+    const { data: maintenances, mutate, error } = useSWR("/maintenances", fetcher, { revalidateOnFocus: false });
 
-    const fetchMaintenances = async () => {
+    const handleAddMaintenance = async (newMaintenance: MaintenanceInput) => {
         try {
-            const allMaintenances = await MaintenanceService.getAllMaintenances();
-            setMaintenances(allMaintenances);
+            const addedMaintenance = await MaintenanceService.addMaintenance(newMaintenance);
+
+            // Update SWR cache directly to prevent re-fetching and duplicates
+            mutate((cachedMaintenances: any) => [...(cachedMaintenances || []), addedMaintenance], false);
+
+            setIsFormVisible(false); // Close the form
         } catch (error) {
-            console.error('Error fetching maintenances:', error);
+            console.error("Error adding maintenance:", error);
         }
     };
 
-    useEffect(() => {
-        fetchMaintenances();
-    }, []);
+    if (error) {
+        return <div className="text-red-500">Failed to load maintenances.</div>;
+    }
 
-    const handleAddMaintenance = (newMaintenance: MaintenanceInput) => {
-        setMaintenances([...maintenances, newMaintenance]);
-    };
+    if (!maintenances) {
+        return <div className="text-white">Loading...</div>;
+    }
 
     return (
         <div className="min-h-screen bg-gray-900 text-white p-8">
@@ -39,7 +54,7 @@ const MaintenancesPage: React.FC = () => {
                 <AddMaintenanceForm onClose={() => setIsFormVisible(false)} onAdd={handleAddMaintenance} />
             )}
 
-            <MaintenanceOverviewtable maintenances={maintenances} />
+            <MaintenanceOverviewTable maintenances={maintenances} />
         </div>
     );
 };

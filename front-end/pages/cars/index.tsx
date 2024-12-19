@@ -1,29 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import useSWR from 'swr';
 import CarOverviewTable from '../../components/cars/CarOverviewTable';
 import AddCarForm from '../../components/cars/AddCarForm';
 import CarService from '../../services/CarService';
 import { CarInput } from '../../types';
 
+const fetcher = async () => {
+    try {
+        const cars = await CarService.getAllCars();
+        return cars;
+    } catch (error) {
+        console.error('Error fetching cars:', error);
+        throw error;
+    }
+};
+
 const CarsPage: React.FC = () => {
     const [isFormVisible, setIsFormVisible] = useState(false);
-    const [cars, setCars] = useState<CarInput[]>([]);
+    const { data: cars, mutate, error } = useSWR('/cars', fetcher, { revalidateOnFocus: false });
 
-    const fetchCars = async () => {
+    const handleAddCar = async (newCar: CarInput) => {
         try {
-            const allCars = await CarService.getAllCars();
-            setCars(allCars);
+            const addedCar = await CarService.addCar(newCar);
+
+            // Update SWR cache directly to prevent re-fetching and duplicates
+            mutate((cachedCars: any) => [...(cachedCars || []), addedCar], false);
+
+            setIsFormVisible(false); // Close the form
         } catch (error) {
-            console.error('Error fetching cars:', error);
+            console.error('Error adding car:', error);
         }
     };
 
-    useEffect(() => {
-        fetchCars();
-    }, []);
+    if (error) {
+        return <div className="text-red-500">Failed to load cars.</div>;
+    }
 
-    const handleAddCar = (newCar: CarInput) => {
-        setCars([...cars, newCar]);
-    };
+    if (!cars) {
+        return <div className="text-white">Loading...</div>;
+    }
 
     return (
         <div className="min-h-screen bg-gray-900 text-white p-8">
