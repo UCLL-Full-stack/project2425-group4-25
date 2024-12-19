@@ -34,10 +34,18 @@ type GarageInput = {
     place: string;
 };
 
+type AuthenticationResponse = {
+    token: string;
+    username: string;
+    fullname: string;
+    role: string;
+};
+
 export {
     Role,
     CarInput,
     MaintenanceInput,
     GarageInput,
-    UserInput
+    UserInput,
+    AuthenticationResponse,
 };

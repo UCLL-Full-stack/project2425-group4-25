@@ -97,17 +97,17 @@ const userRouter = express.Router();
  *               items:
  *                  $ref: '#/components/schemas/User'
  */
-// userRouter.get(
-//     '/',
-//     async (req: Request & { auth: UserInput }, res: Response, next: NextFunction) => {
-//         try {
-//             const users = await userService.getAllUsers();
-//             res.status(200).json(users);
-//         } catch (error) {
-//             next(error);
-//         }
-//     }
-// );
+userRouter.get(
+    '/',
+    async (req: Request & { auth: UserInput }, res: Response, next: NextFunction) => {
+        try {
+            const users = await userService.getAllUsers();
+            res.status(200).json(users);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
 
 /**
  * @swagger
@@ -168,20 +168,20 @@ userRouter.post(
  *       500:
  *         description: Internal server error.
  */
-// userRouter.post(
-//     '/login',
-//     async (req: Request, res: Response, next: NextFunction) => {
-//         try {
-//             const userInput: UserInput = req.body;
-//             const response = await userService.authenticate(userInput);
-//             res.status(200).json({
-//                 message: 'Authentication successful',
-//                 ...response,
-//             });
-//         } catch (error) {
-//             next(error);
-//         }
-//     }
-// );
+userRouter.post(
+    '/login',
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userInput: UserInput = req.body;
+            const response = await userService.authenticate(userInput);
+            res.status(200).json({
+                message: 'Authentication successful',
+                ...response,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+);
 
 export { userRouter };

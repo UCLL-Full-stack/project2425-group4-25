@@ -65,7 +65,7 @@ const createUser = async ({
             },
         });
 
-        return User.from(newUser); // Convert Prisma object to User instance
+        return User.from(newUser);
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');
@@ -78,5 +78,5 @@ export default {
     getAllUsers,
     getUserById,
     getUserByUsername,
-    createUser,
+    createUser
 };
