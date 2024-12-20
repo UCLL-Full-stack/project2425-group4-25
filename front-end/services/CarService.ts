@@ -38,6 +38,7 @@ const addCar = async (carData: Partial<CarInput>): Promise<CarInput> => {
             electric: carData.electric,
             brand: carData.brand,
             garageId: carData.garageId,
+            userId: carData.userId,
         };
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars`, {

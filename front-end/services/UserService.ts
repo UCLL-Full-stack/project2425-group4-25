@@ -42,9 +42,20 @@ const signupUser = async (user: User) => {
     };
 };
 
+const getUsers = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error( errorData.message ||"Failed to fetch users");
+    }
+    const data = await response.json();
+    return data;
+};
+
 const UserService = {
     loginUser,
     signupUser,
+    getUsers,
 };
 
 export default UserService;
