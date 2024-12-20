@@ -91,19 +91,19 @@ const HomePage: React.FC = () => {
                     </thead>
                     <tbody>
                         <tr className="border-b border-gray-600">
-                            <td className="px-4 py-2">dylan</td>
-                            <td className="px-4 py-2">dylan123</td>
-                            <td className="px-4 py-2">admin</td>
-                        </tr>
-                        <tr className="border-b border-gray-600">
-                            <td className="px-4 py-2">user1</td>
-                            <td className="px-4 py-2">user123</td>
+                            <td className="px-4 py-2">johndoe</td>
+                            <td className="px-4 py-2">password123</td>
                             <td className="px-4 py-2">customer</td>
                         </tr>
                         <tr className="border-b border-gray-600">
-                            <td className="px-4 py-2">user2</td>
-                            <td className="px-4 py-2">user123</td>
+                            <td className="px-4 py-2">janedoe</td>
+                            <td className="px-4 py-2">securepass</td>
                             <td className="px-4 py-2">employee</td>
+                        </tr>
+                        <tr className="border-b border-gray-600">
+                            <td className="px-4 py-2">admin</td>
+                            <td className="px-4 py-2">adminpass</td>
+                            <td className="px-4 py-2">admin</td>
                         </tr>
                     </tbody>
                 </table>
