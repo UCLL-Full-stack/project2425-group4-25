@@ -7,13 +7,15 @@ import { useTranslation } from 'next-i18next';
 
 const HomePage: React.FC = () => {
     const { t } = useTranslation('common');
-    const [garages, setGarages] = useState<{ id: number; name: string; size: number; place: string }[]>([]);
+    const [garages, setGarages] = useState<{ id: number; name: string; size: number; place: string; cars: any[] }[]>([]);
 
     useEffect(() => {
         const fetchGarages = async () => {
             try {
                 const allGarages = await GarageService.getAllGarages();
-                const sortedGarages = allGarages.sort((a: any, b: any) => b.size - a.size).slice(0, 3);
+                const sortedGarages = allGarages
+                    .sort((a: any, b: any) => b.cars.length - a.cars.length) // Sort by the number of cars
+                    .slice(0, 3);
                 setGarages(sortedGarages);
             } catch (error) {
                 console.error(t('general.error'), error);
@@ -62,10 +64,11 @@ const HomePage: React.FC = () => {
                     {garages.length > 0 ? (
                         garages.map((garage) => (
                             <Link href={`/garages/${garage.id}`} key={garage.id}>
-                                <div className="bg-white text-black rounded-lg shadow-md p-6 hover:shadow-lg transition duration-200">
+                                <div className="bg-gradient-to-br from-gray-700 to-gray-900 text-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-200">
                                     <h3 className="text-xl font-semibold mb-2">{garage.name}</h3>
-                                    <p className="text-gray-700 mb-2">{t('home.garages.size')}: {garage.size}</p>
-                                    <p className="text-gray-700">{t('home.garages.place')}: {garage.place}</p>
+                                    <p className="text-gray-300 mb-2">{t('home.garages.size')}: {garage.size}</p>
+                                    <p className="text-gray-300 mb-2">{t('home.garages.place')}: {garage.place}</p>
+                                    <p className="text-gray-300">{t('home.garages.cars')}: {garage.cars.length}</p>
                                 </div>
                             </Link>
                         ))
@@ -107,10 +110,10 @@ const HomePage: React.FC = () => {
             </section>
 
             {/* Values Section */}
-            <section className="bg-white text-black py-10 px-8">
+            <section className="bg-gray-800 text-white py-10 px-8 rounded-lg shadow-lg">
                 <h2 className="text-2xl md:text-3xl font-bold mb-4">{t('home.values.title')}</h2>
-                <p className="mb-6">{t('home.values.description')}</p>
-                <ul className="list-disc list-inside space-y-2">
+                <p className="mb-6 text-gray-300">{t('home.values.description')}</p>
+                <ul className="list-disc list-inside space-y-2 text-gray-400">
                     <li>{t('home.values.point1')}</li>
                     <li>{t('home.values.point2')}</li>
                     <li>{t('home.values.point3')}</li>

@@ -42,7 +42,8 @@
             "description": "Operamos garajes de última generación en ubicaciones estratégicas para satisfacer sus necesidades de manera eficiente.",
             "size": "Tamaño",
             "place": "Lugar",
-            "noAvailable": "No hay garajes disponibles"
+            "noAvailable": "No hay garajes disponibles",
+            "cars": "Número de coches"
         },
         "values": {
             "title": "¿Por Qué Elegirnos?",
