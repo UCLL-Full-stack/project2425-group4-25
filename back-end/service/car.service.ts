@@ -13,12 +13,12 @@ const getCarById = async (id: number): Promise<Car> => {
     return car;
 };
 
-const createCar = async ({ color, electric, brand, garageId }: CarInput): Promise<Car> => {
+const createCar = async ({ color, electric, brand, garageId, userId }: CarInput): Promise<Car> => {
     const garage = await garageDB.getGarageById({id: garageId});
     if (!garage) throw new Error(`Garage with id ${garageId} does not exist.`);
     if (garage.cars.length >= garage.size) throw new Error(`Garage with id ${garageId} is full.`);
 
-    return carDB.createCar({ color, electric, brand, garageId });
+    return carDB.createCar({ color, electric, brand, garageId, userId });
 };
 
 const updateCar = async (

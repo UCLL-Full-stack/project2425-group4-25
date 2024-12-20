@@ -16,6 +16,7 @@ type CarInput = {
     color: string;
     electric: boolean;
     garageId: number;
+    userId: number;
 };
 
 type MaintenanceInput = {
