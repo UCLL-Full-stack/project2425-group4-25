@@ -134,4 +134,93 @@ maintenanceRouter.post('/', async (req: Request, res: Response, next: NextFuncti
     }
 });
 
+/**
+ * @swagger
+ * /maintenances/{id}:
+ *   put:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Update an existing maintenance record by ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *           required: true
+ *           description: The maintenance id.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               type:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               cost:
+ *                 type: number
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *               duration:
+ *                 type: number
+ *               cars:
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *                   description: Car IDs associated with the maintenance.
+ *     responses:
+ *       200:
+ *         description: The updated maintenance record.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Maintenance'
+ *       404:
+ *         description: Maintenance not found.
+ */
+maintenanceRouter.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = Number(req.params.id);
+        const updates = req.body;
+        const updatedMaintenance = await maintenanceService.updateMaintenance(id, updates);
+        res.status(200).json(updatedMaintenance);
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @swagger
+ * /maintenances/{id}:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Delete a maintenance record by ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *           required: true
+ *           description: The maintenance id.
+ *     responses:
+ *       200:
+ *         description: Maintenance successfully deleted.
+ *       404:
+ *         description: Maintenance not found.
+ */
+maintenanceRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = Number(req.params.id);
+        await maintenanceService.deleteMaintenance(id);
+        res.status(200).send({ message: `Maintenance with ID ${id} has been deleted.` });
+    } catch (error) {
+        next(error);
+    }
+});
+
+
 export { maintenanceRouter };

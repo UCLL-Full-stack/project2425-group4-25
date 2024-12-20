@@ -122,4 +122,88 @@ garageRouter.post('/', async (req: Request, res: Response, next: NextFunction) =
     }
 });
 
+/**
+ * @swagger
+ * /garages/{id}:
+ *   put:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Update an existing garage by ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *           required: true
+ *           description: The garage id.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               size:
+ *                 type: number
+ *               place:
+ *                 type: string
+ *               cars:
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *                   description: Car IDs to associate with the garage.
+ *     responses:
+ *       200:
+ *         description: The updated garage.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Garage'
+ *       404:
+ *         description: Garage not found.
+ */
+garageRouter.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = Number(req.params.id);
+        const updates = req.body;
+        const updatedGarage = await garageService.updateGarage(id, updates);
+        res.status(200).json(updatedGarage);
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * @swagger
+ * /garages/{id}:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Delete a garage by ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *           required: true
+ *           description: The garage id.
+ *     responses:
+ *       200:
+ *         description: Garage successfully deleted.
+ *       404:
+ *         description: Garage not found.
+ */
+garageRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = Number(req.params.id);
+        await garageService.deleteGarage(id);
+        res.status(200).send({ message: `Garage with ID ${id} has been deleted.` });
+    } catch (error) {
+        next(error);
+    }
+});
+
+
 export { garageRouter };

@@ -72,11 +72,53 @@ const createUser = async ({
     }
 };
 
+const updateUser = async (
+    id: number,
+    updates: Partial<{
+        username: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        role: Role;
+        password: string;
+    }>
+): Promise<User | null> => {
+    try {
+        const updatedUser = await database.user.update({
+            where: { id },
+            data: updates,
+        });
 
+        return User.from(updatedUser);
+    } catch (error) {
+        console.error(error);
+        if (error.code === 'P2025') {
+            throw new Error(`User with ID ${id} not found.`);
+        }
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+const deleteUser = async (id: number): Promise<boolean> => {
+    try {
+        await database.user.delete({
+            where: { id },
+        });
+        return true;
+    } catch (error) {
+        console.error(error);
+        if (error.code === 'P2025') {
+            throw new Error(`User with ID ${id} not found.`);
+        }
+        throw new Error('Database error. See server log for details.');
+    }
+};
 
 export default {
     getAllUsers,
     getUserById,
     getUserByUsername,
-    createUser
+    createUser,
+    updateUser,
+    deleteUser,
 };

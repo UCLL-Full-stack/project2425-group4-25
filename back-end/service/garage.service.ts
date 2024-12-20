@@ -12,12 +12,28 @@ const getGarageById = async (id: number): Promise<Garage> => {
     return garage;
 };
 
-const createGarage = async ({name , size , place }: GarageInput): Promise<Garage> => {
+const createGarage = async ({ name, size, place }: GarageInput): Promise<Garage> => {
     return garageDB.createGarage(new Garage({ name, size, place, cars: [] }));
+};
+
+const updateGarage = async (
+    id: number,
+    updates: Partial<GarageInput>
+): Promise<Garage> => {
+    const updatedGarage = await garageDB.updateGarage(id, updates);
+    if (!updatedGarage) throw new Error(`Failed to update garage with id ${id}.`);
+    return updatedGarage;
+};
+
+const deleteGarage = async (id: number): Promise<void> => {
+    const success = await garageDB.deleteGarage(id);
+    if (!success) throw new Error(`Failed to delete garage with id ${id}.`);
 };
 
 export default {
     getAllGarages,
     getGarageById,
     createGarage,
+    updateGarage,
+    deleteGarage,
 };

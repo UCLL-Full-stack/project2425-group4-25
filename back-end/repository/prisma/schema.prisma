@@ -22,7 +22,6 @@ model Car {
   brand        String
   garageId     Int
   garage       Garage             @relation(fields: [garageId], references: [id])
-  user         User[]             @relation(fields: [userId], references: [id])
   maintenances Car2Maintenance[]
 }
 
@@ -52,5 +51,4 @@ model User {
   email     String    @unique
   role      String
   password  String
-  cars      Car[]
 }
