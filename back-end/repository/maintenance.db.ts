@@ -102,6 +102,11 @@ const updateMaintenance = async (
 
 const deleteMaintenance = async (id: number): Promise<boolean> => {
     try {
+
+        await database.car2Maintenance.deleteMany({
+            where: { maintenanceId: id },
+        });
+        
         await database.maintenance.delete({
             where: { id },
         });
