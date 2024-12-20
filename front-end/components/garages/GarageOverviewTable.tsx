@@ -1,5 +1,6 @@
 import React from 'react';
 import { Garage } from '../../types';
+import Link from 'next/link';
 
 interface GarageOverviewTableProps {
     garages: Garage[] | undefined; // Handle undefined garages
@@ -26,6 +27,7 @@ const GarageOverviewTable: React.FC<GarageOverviewTableProps> = ({ garages }) =>
                             <th className="px-4 py-2">Name</th>
                             <th className="px-4 py-2">Size</th>
                             <th className="px-4 py-2">Place</th>
+                            <th className="px-4 py-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,6 +37,23 @@ const GarageOverviewTable: React.FC<GarageOverviewTableProps> = ({ garages }) =>
                                 <td className="px-4 py-2">{garage.name}</td>
                                 <td className="px-4 py-2">{garage.size}</td>
                                 <td className="px-4 py-2">{garage.place}</td>
+                                <td className="px-4 py-2">    
+                                    <Link href={`/garages/${garage.id}`} className="bg-blue-500 hover:underline rounded-sm px-2 py-1">
+                                        Details
+                                    </Link>
+                                    <button
+                                        className="bg-red-500 ml-2 hover:underline rounded-sm px-2 py-1"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const confirmDelete = confirm('Are you sure you want to delete this garage?');
+                                            if (confirmDelete){
+                                                console.log('Delete garage with ID:', garage.id);
+                                            }
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

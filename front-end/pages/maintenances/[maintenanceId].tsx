@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import MaintenanceDetails from "@components/maintenances/MaintenanceDetails";
 import { useRouter } from "next/router";
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import MaintenanceService from "@services/MaintenanceService";
 
 
 const MaintenanceDetailsPage: React.FC = () => {
@@ -27,6 +28,14 @@ const MaintenanceDetailsPage: React.FC = () => {
     }
     return <MaintenanceDetails />;
 }
+export const getStaticPaths: GetStaticPaths = async () => {
+    const maintenances = await MaintenanceService.getAllMaintenances();
+    const paths = maintenances.map((maintenance: { id: number }) => ({
+        params: { maintenanceId: maintenance.id.toString() },
+    }));
+    return { paths, fallback: "blocking" };
+};
+
 export const getStaticProps: GetStaticProps = async ({ locale }) => ({
     props: {
         ...(await serverSideTranslations(locale || 'en', ['common'])),

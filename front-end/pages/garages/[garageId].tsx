@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import GarageDetails from "@components/garages/GarageDetails";
 import { useRouter } from "next/router";
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import GarageService from "../../services/GarageService";
 
-const GarageDetailsPage: React.FC = () => {
+const GarageDetailsPage: React.FC<{ garageId: string }> = ({ garageId }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const router = useRouter();
 
@@ -25,10 +26,31 @@ const GarageDetailsPage: React.FC = () => {
         );
     }
     return <GarageDetails />;
-}
-export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-    props: {
-        ...(await serverSideTranslations(locale || 'en', ['common'])),
-    },
-});
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+    // Fetch all garages to generate paths
+    const garages = await GarageService.getAllGarages();
+
+    const paths = garages.map((garage: { id: number }) => ({
+        params: { garageId: garage.id.toString() },
+    }));
+
+    return {
+        paths,
+        fallback: "blocking", // Allow non-predefined paths to be dynamically generated
+    };
+};
+
+export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
+    const { garageId } = params as { garageId: string };
+
+    return {
+        props: {
+            garageId,
+            ...(await serverSideTranslations(locale || "en", ["common"])),
+        },
+    };
+};
+
 export default GarageDetailsPage;
