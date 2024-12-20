@@ -8,6 +8,15 @@ interface CarOverviewTableProps {
 }
 
 const CarOverviewTable: React.FC<CarOverviewTableProps> = ({ cars }) => {
+    if (!cars || cars.length === 0) {
+        return (
+            <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
+                <h2 className="text-2xl font-bold text-white mb-4">Car Overview</h2>
+                <p className="text-gray-400">No cars available.</p>
+            </div>
+        );
+    }
+    
     return (
         <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold text-white mb-4">Car Overview</h2>
@@ -19,6 +28,7 @@ const CarOverviewTable: React.FC<CarOverviewTableProps> = ({ cars }) => {
                             <th className="px-4 py-2">Brand</th>
                             <th className="px-4 py-2">Color</th>
                             <th className="px-4 py-2">Electric</th>
+                            <th className="px-4 py-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,6 +45,23 @@ const CarOverviewTable: React.FC<CarOverviewTableProps> = ({ cars }) => {
                                     >
                                         {car.electric ? 'Yes' : 'No'}
                                     </span>
+                                </td>
+                                <td className="px-4 py-2">    
+                                    <Link href={`/cars/${car.id}`} className="bg-blue-500 hover:underline rounded-sm px-2 py-1">
+                                        Details
+                                    </Link>
+                                    <button
+                                        className="bg-red-500 ml-2 hover:underline rounded-sm px-2 py-1"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const confirmDelete = confirm('Are you sure you want to delete this car?');
+                                            if (confirmDelete){
+                                                console.log('Delete car with ID:', car.id);
+                                            }
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
                                 </td>
                             </tr>
                         ))}

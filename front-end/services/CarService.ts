@@ -58,10 +58,24 @@ const addCar = async (carData: Partial<CarInput>): Promise<CarInput> => {
         throw error;
     }
 };
+    const deleteCar = async (carId: string) => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cars/${carId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to delete maintenance");
+        }
+    };
+
 const CarService = {
     getAllCars,
     getCarById,
     addCar,
+    deleteCar,
 };
 
 export default CarService;

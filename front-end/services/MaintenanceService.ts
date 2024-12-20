@@ -59,10 +59,24 @@ const addMaintenance = async (maintenanceData: Partial<MaintenanceInput>): Promi
     }
 }
 
+const deleteMaintenance = async (maintenanceId: string) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/maintenances/${maintenanceId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to delete maintenance");
+    }
+};
+
 const MaintenanceService = {
     getAllMaintenances,
     getMaintenanceById,
     addMaintenance,
+    deleteMaintenance,
 };
 
 export default MaintenanceService;

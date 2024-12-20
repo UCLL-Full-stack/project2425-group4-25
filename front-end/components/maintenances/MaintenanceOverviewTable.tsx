@@ -1,6 +1,7 @@
 import React from 'react';
 import { MaintenanceInput } from '../../types';
 import router from 'next/router';
+import Link from 'next/link';
 
 
 interface MaintenanceOverviewTableProps {
@@ -20,6 +21,7 @@ const MaintenanceOverviewTable: React.FC<MaintenanceOverviewTableProps> = ({ mai
                             <th className="px-4 py-2">Date</th>
                             <th className="px-4 py-2">Description</th>
                             <th className="px-4 py-2">Cost</th>
+                            <th className="px-4 py-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,6 +32,23 @@ const MaintenanceOverviewTable: React.FC<MaintenanceOverviewTableProps> = ({ mai
                                 <td className="px-4 py-2">{maintenance.date}</td>
                                 <td className="px-4 py-2">{maintenance.description}</td>
                                 <td className="px-4 py-2">{maintenance.cost}</td>
+                                <td className="px-4 py-2">    
+                                    <Link href={`/maintenances/${maintenance.id}`} className="bg-blue-500 hover:underline rounded-sm px-2 py-1">
+                                        Details
+                                    </Link>
+                                    <button
+                                        className="bg-red-500 ml-2 hover:underline rounded-sm px-2 py-1"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const confirmDelete = confirm('Are you sure you want to delete this maintenance?');
+                                            if (confirmDelete){
+                                                console.log('Delete maintenance with ID:', maintenance.id);
+                                            }
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

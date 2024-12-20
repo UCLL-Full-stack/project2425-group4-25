@@ -50,10 +50,25 @@ const getGarageById = async (garageId: string) => {
     return await response.json(); // Return JSON response
 };
 
+const deleteGarage = async (garageId: string) => {
+    const response = await fetch(`${API_URL}/${garageId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to delete garage");
+    }
+};
+
+
 const GarageService = {
     getAllGarages,
     addGarage,
     getGarageById,
+    deleteGarage,
 };
 
 export default GarageService;
