@@ -110,24 +110,39 @@ const updateGarage = async (
 
 const deleteGarage = async (id: number): Promise<boolean> => {
     try {
-
-        await database.car.deleteMany({
+        const cars = await database.car.findMany({
             where: { garageId: id },
+            select: { id: true },
         });
-        
+        const carIds = cars.map((car) => car.id);
+
+        if (carIds.length > 0) {
+            await database.car2Maintenance.deleteMany({
+                where: {
+                    carId: { in: carIds },
+                },
+            });
+
+            
+            await database.car.deleteMany({
+                where: { garageId: id },
+            });
+        }
+
         await database.garage.delete({
             where: { id },
         });
+
         return true;
     } catch (error) {
         console.error(error);
         if (error.code === 'P2025') {
-            // Prisma-specific error code for "Record not found"
             throw new Error(`Garage with ID ${id} not found.`);
         }
         throw new Error('Database error. See server log for details.');
     }
 };
+
 
 export default {
     createGarage,
