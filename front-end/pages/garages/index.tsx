@@ -22,7 +22,7 @@ const GaragesPage: React.FC = () => {
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const { data: garages, mutate, error } = useSWR('/garages', fetcher, { revalidateOnFocus: false });
+    const { data: garages, mutate, error } = useSWR('/garages', fetcher, { revalidateOnFocus: false, revalidateOnReconnect: false });
     const router = useRouter();
 
     useEffect(() => {
@@ -53,24 +53,23 @@ const GaragesPage: React.FC = () => {
     const handleAddGarage = async (newGarageInput: GarageInput) => {
         try {
             const addedGarage = await GarageService.addGarage(newGarageInput);
-
-            // Update SWR cache directly to prevent re-fetching and duplicates
-            mutate((cachedGarages: any) => [...(cachedGarages || []), addedGarage], false);
-
+    
+            // Update SWR cache safely
+            mutate((cachedGarages: Garage[] | undefined) => {
+                if (cachedGarages) {
+                    return [...cachedGarages, addedGarage];
+                }
+                return [addedGarage];
+            }, false);
+    
             setIsFormVisible(false); // Close the form
         } catch (error) {
             console.error('Error adding garage:', error);
         }
     };
-
-    if (error) {
-        return <div className="text-red-500">Failed to load garages.</div>;
-    }
-
-    if (!garages) {
-        return <div className="text-white">Loading...</div>;
-    }
-
+    
+    
+    
     return (
         <div className="min-h-screen bg-gray-900 text-white p-8">
             <h1 className="text-4xl font-bold mb-6">Garages Overview</h1>

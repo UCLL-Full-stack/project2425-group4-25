@@ -43,24 +43,22 @@ const CarsPage: React.FC = () => {
 
     const handleAddCar = async (newCar: CarInput) => {
         try {
-            const addedCar = await CarService.addCar(newCar);
-
-            // Update SWR cache directly to prevent re-fetching and duplicates
-            mutate((cachedCars: any) => [...(cachedCars || []), addedCar], false);
-
+            const addedCar = await CarService.addCar(newCar); // Make the POST request here
+    
+            // Update SWR cache safely
+            mutate((cachedCars: CarInput[] | undefined) => {
+                if (cachedCars) {
+                    return [...cachedCars, addedCar];
+                }
+                return [addedCar];
+            }, false);
+    
             setIsFormVisible(false); // Close the form
         } catch (error) {
             console.error('Error adding car:', error);
         }
     };
-
-    if (error) {
-        return <div className="text-red-500">Failed to load cars.</div>;
-    }
-
-    if (!cars) {
-        return <div className="text-white">Loading...</div>;
-    }
+    
 
     return (
         <div className="min-h-screen bg-gray-900 text-white p-8">

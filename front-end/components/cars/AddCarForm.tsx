@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CarInput } from '../../types';
 import GarageService from '../../services/GarageService';
-import CarService from '../../services/CarService';
 
 interface AddCarFormProps {
     onClose: () => void;
@@ -14,7 +13,7 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose, onAdd }) => {
     const [electric, setElectric] = useState(false);
     const [garageId, setGarageId] = useState<number | ''>('');
     const [garages, setGarages] = useState<{ id: number; name: string; size: number; place: string }[]>([]);
-    const [error, setError] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchGarages = async () => {
@@ -30,27 +29,30 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose, onAdd }) => {
         fetchGarages();
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const validate = (): boolean => {
         if (!brand || !color || !garageId) {
             setError('All fields are required.');
+            return false;
+        }
+        setError(null);
+        return true;
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!validate()) {
             return;
         }
 
-        try {
-            const newCar: CarInput = {
-                brand,
-                color,
-                electric,
-                garageId: Number(garageId),
-            };
-            const addedCar = await CarService.addCar(newCar);
-            onAdd(addedCar);
-            onClose();
-        } catch (err) {
-            console.error('Error adding car:', err);
-            setError('Failed to add car. Please try again.');
-        }
+        const newCar: CarInput = {
+            brand,
+            color,
+            electric,
+            garageId: Number(garageId),
+        };
+
+        onAdd(newCar); // Pass the new car data to the parent
+        onClose(); // Close the form
     };
 
     return (

@@ -12,35 +12,51 @@ const AddGarageForm: React.FC<AddGarageFormProps> = ({ onClose, onAdd }) => {
     const [size, setSize] = useState<number | "">("");
     const [place, setPlace] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const [status, setStatus] = useState<string | null>(null);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
+    const validate = (): boolean => {
         if (!name || !size || !place) {
             setError("All fields are required.");
+            return false;
+        }
+        if (Number(size) <= 0 || isNaN(Number(size))) {
+            setError("Size must be a positive number.");
+            return false;
+        }
+        setError(null);
+        return true;
+    };
+
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+    
+        if (!validate()) {
             return;
         }
-
+    
         const newGarage: GarageInput = {
             name,
             size: Number(size),
             place,
         };
-
+    
         try {
-            const addedGarage = await GarageService.addGarage(newGarage);
-            onAdd(addedGarage);
+            // Pass the new garage to the parent without making a POST request
+            onAdd(newGarage); 
+            setStatus("Garage added successfully.");
             onClose();
         } catch (err) {
             console.error("Error adding garage:", err);
             setError("Failed to add garage. Please try again.");
         }
     };
+        
 
     return (
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg mx-auto">
             <h2 className="text-2xl font-bold text-white mb-4">Add a New Garage</h2>
             {error && <p className="text-red-500 mb-4">{error}</p>}
+            {status && <p className="text-green-500 mb-4">{status}</p>}
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label className="block text-gray-300 mb-2">Name</label>
