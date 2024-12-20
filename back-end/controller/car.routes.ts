@@ -92,30 +92,26 @@ carRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =>
  *   post:
  *     security:
  *       - bearerAuth: []
- *     summary: Create a new car.
+ *     summary: Create a new car
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               color:
- *                 type: string
- *               electric:
- *                 type: boolean
- *               brand:
- *                 type: string
- *               garageId:
- *                 type: number
- *                 format: int64
+ *             $ref: '#/components/schemas/CarInput'
  *     responses:
  *       201:
- *         description: The created car.
+ *         description: Car successfully created.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Car'
+ *       400:
+ *         description: Garage is full or invalid request data.
+ *       404:
+ *         description: Garage not found.
+ *       500:
+ *         description: Internal server error.
  */
 carRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
