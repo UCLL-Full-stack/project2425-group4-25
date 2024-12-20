@@ -110,6 +110,11 @@ const updateGarage = async (
 
 const deleteGarage = async (id: number): Promise<boolean> => {
     try {
+
+        await database.car.deleteMany({
+            where: { garageId: id },
+        });
+        
         await database.garage.delete({
             where: { id },
         });
