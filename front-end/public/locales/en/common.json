@@ -42,7 +42,8 @@
             "description": "We operate state-of-the-art garages in strategic locations to serve your needs efficiently.",
             "size": "Size",
             "place": "Place",
-            "noAvailable": "No garages available"
+            "noAvailable": "No garages available",
+            "cars": "Number of cars"
         },
         "values": {
             "title": "Why Choose Us?",
