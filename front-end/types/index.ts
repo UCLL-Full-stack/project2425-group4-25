@@ -21,7 +21,7 @@ export type MaintenanceInput = {
     cost: number; // Cost of the maintenance
     date: string; // ISO string format for input consistency
     duration: number; // Duration in hours
-    carId: number; // car ID associated with the maintenance
+    carIds: number[]; // car IDs associated with the maintenance
 };
 
 

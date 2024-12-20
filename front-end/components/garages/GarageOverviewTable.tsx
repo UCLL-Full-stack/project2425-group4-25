@@ -1,12 +1,14 @@
 import React from 'react';
 import { Garage } from '../../types';
 import Link from 'next/link';
+import GarageService from '../../services/GarageService'; // Import the GarageService
 
 interface GarageOverviewTableProps {
     garages: Garage[] | undefined; // Handle undefined garages
+    onDelete: (garageId: number) => void; // Callback for deleting a garage
 }
 
-const GarageOverviewTable: React.FC<GarageOverviewTableProps> = ({ garages }) => {
+const GarageOverviewTable: React.FC<GarageOverviewTableProps> = ({ garages, onDelete }) => {
     if (!garages || garages.length === 0) {
         return (
             <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
@@ -15,6 +17,19 @@ const GarageOverviewTable: React.FC<GarageOverviewTableProps> = ({ garages }) =>
             </div>
         );
     }
+
+    const handleDelete = async (garageId: number) => {
+        const confirmDelete = confirm('Are you sure you want to delete this garage?');
+        if (!confirmDelete) return;
+
+        try {
+            await GarageService.deleteGarage(String(garageId)); // Call the delete API
+            onDelete(garageId); // Notify parent to update the list
+        } catch (error) {
+            console.error('Error deleting garage:', error);
+            alert('Failed to delete the garage. Please try again.');
+        }
+    };
 
     return (
         <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
@@ -43,13 +58,7 @@ const GarageOverviewTable: React.FC<GarageOverviewTableProps> = ({ garages }) =>
                                     </Link>
                                     <button
                                         className="bg-red-500 ml-2 hover:underline rounded-sm px-2 py-1"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            const confirmDelete = confirm('Are you sure you want to delete this garage?');
-                                            if (confirmDelete){
-                                                console.log('Delete garage with ID:', garage.id);
-                                            }
-                                        }}
+                                        onClick={() => garage.id !== undefined && handleDelete(garage.id)}
                                     >
                                         Delete
                                     </button>

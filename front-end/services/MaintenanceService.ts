@@ -30,14 +30,18 @@ const getMaintenanceById = async (id: string) => {
 
 const addMaintenance = async (maintenanceData: Partial<MaintenanceInput>): Promise<MaintenanceInput> => {
     try {
+        // Ensure `carIds` is an array of integers
+        if (!maintenanceData.carIds || !Array.isArray(maintenanceData.carIds)) {
+            throw new Error("carIds must be an array of integers.");
+        }
+
         const payload = {
-            id: maintenanceData.id,
             type: maintenanceData.type,
             description: maintenanceData.description,
             cost: maintenanceData.cost,
             date: maintenanceData.date,
             duration: maintenanceData.duration,
-            carId: maintenanceData.carId,
+            carIds: maintenanceData.carIds, // Ensure this matches the expected API format
         };
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/maintenances`, {
@@ -49,7 +53,8 @@ const addMaintenance = async (maintenanceData: Partial<MaintenanceInput>): Promi
         });
 
         if (!response.ok) {
-            throw new Error('Failed to add maintenance');
+            const errorDetails = await response.json();
+            throw new Error(errorDetails.message || 'Failed to add maintenance');
         }
 
         return await response.json();
@@ -57,7 +62,7 @@ const addMaintenance = async (maintenanceData: Partial<MaintenanceInput>): Promi
         console.error('Error adding maintenance:', error);
         throw error;
     }
-}
+};
 
 const deleteMaintenance = async (maintenanceId: string) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/maintenances/${maintenanceId}`, {
