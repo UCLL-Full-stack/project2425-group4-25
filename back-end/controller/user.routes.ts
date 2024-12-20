@@ -184,4 +184,126 @@ userRouter.post(
     }
 );
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Get a user by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *           required: true
+ *           description: The user ID.
+ *     responses:
+ *       200:
+ *         description: A user object.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal server error.
+ */
+userRouter.get(
+    '/:id',
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const user = await userService.getUserById(Number(req.params.id));
+            res.status(200).json(user);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   put:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Update an existing user by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *           required: true
+ *           description: The user ID.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserInput'
+ *     responses:
+ *       200:
+ *         description: The updated user object.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found.
+ *       400:
+ *         description: Invalid request data.
+ *       500:
+ *         description: Internal server error.
+ */
+userRouter.put(
+    '/:id',
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = Number(req.params.id);
+            const updates = req.body;
+            const updatedUser = await userService.updateUser(id, updates);
+            res.status(200).json(updatedUser);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Delete a user by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *           required: true
+ *           description: The user ID.
+ *     responses:
+ *       200:
+ *         description: User successfully deleted.
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal server error.
+ */
+userRouter.delete(
+    '/:id',
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = Number(req.params.id);
+            await userService.deleteUser(id);
+            res.status(200).send({ message: `User with ID ${id} has been deleted.` });
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+
 export { userRouter };

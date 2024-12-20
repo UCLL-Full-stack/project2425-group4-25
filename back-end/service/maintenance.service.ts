@@ -13,24 +13,31 @@ const getMaintenanceById = async (id: number): Promise<Maintenance> => {
 };
 
 const createMaintenance = async (
-    {type,
-    description,
-    cost,
-    date,
-    duration}: MaintenanceInput
+    { type, description, cost, date, duration, carIds }: MaintenanceInput
 ): Promise<Maintenance> => {
-    return maintenanceDB.createMaintenance(new Maintenance({
-        type,
-        description,
-        cost,
-        date,
-        duration,
-        cars: [],
-    }));
+    return maintenanceDB.createMaintenance(
+        { type, description, cost, date, duration, carIds }
+    );
+};
+
+const updateMaintenance = async (
+    id: number,
+    updates: Partial<MaintenanceInput>
+): Promise<Maintenance> => {
+    const updatedMaintenance = await maintenanceDB.updateMaintenance(id, updates);
+    if (!updatedMaintenance) throw new Error(`Failed to update maintenance with id ${id}.`);
+    return updatedMaintenance;
+};
+
+const deleteMaintenance = async (id: number): Promise<void> => {
+    const success = await maintenanceDB.deleteMaintenance(id);
+    if (!success) throw new Error(`Failed to delete maintenance with id ${id}.`);
 };
 
 export default {
     getAllMaintenances,
     getMaintenanceById,
     createMaintenance,
+    updateMaintenance,
+    deleteMaintenance,
 };

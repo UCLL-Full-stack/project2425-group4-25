@@ -13,7 +13,6 @@ export class Car {
     readonly brand: string;
     readonly garageId: number;
     readonly maintenances: Maintenance[];
-    readonly user?: User;
 
     constructor(car: {
         id?: number;
@@ -22,7 +21,6 @@ export class Car {
         brand: string;
         garageId: number;
         maintenances?: Maintenance[];
-        user?: User;
     }) {
         this.validate(car);
 
@@ -32,7 +30,6 @@ export class Car {
         this.brand = car.brand;
         this.garageId = car.garageId;
         this.maintenances = car.maintenances ?? [];
-        this.user = car.user;
     }
 
     validate(car: {
@@ -41,7 +38,6 @@ export class Car {
         brand: string;
         garageId: number;
         maintenances?: Maintenance[];
-        user?: User;
     }) {
         if (!car.color) {
             throw new Error('Color is required');
@@ -64,7 +60,6 @@ export class Car {
         brand,
         garageId,
         maintenances = [],
-        user,
     }: {
         id?: number;
         color: string;
@@ -72,7 +67,6 @@ export class Car {
         brand: string;
         garageId: number;
         maintenances?: Maintenance[];
-        user?: User;
     }): boolean {
         return (
             this.id === id &&
@@ -81,20 +75,17 @@ export class Car {
             this.brand === brand &&
             this.garageId === garageId &&
             this.maintenances.length === maintenances.length &&
-            this.maintenances.every((m, i) => m.equals(maintenances[i])) &&
-            ((this.user && user && this.user.equals(user)) || (!this.user && !user))
+            this.maintenances.every((m, i) => m.equals(maintenances[i]))
         );
     }
 
     static from(prismaCar: CarPrisma & {
         maintenances?: { maintenance: MaintenancePrisma }[];
-        user?: UserPrisma;
     }): Car {
         const maintenances = prismaCar.maintenances?.map((m) =>
             Maintenance.from(m.maintenance)
         ) || [];
 
-        const user = prismaCar.user ? User.from(prismaCar.user) : undefined;
 
         return new Car({
             id: prismaCar.id,
@@ -103,7 +94,6 @@ export class Car {
             brand: prismaCar.brand,
             garageId: prismaCar.garageId,
             maintenances,
-            user,
         });
     }
 }
