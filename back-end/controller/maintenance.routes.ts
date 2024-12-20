@@ -107,15 +107,25 @@ maintenanceRouter.get('/:id', async (req: Request, res: Response, next: NextFunc
  *             properties:
  *               type:
  *                 type: string
+ *                 description: The type of maintenance.
  *               description:
  *                 type: string
+ *                 description: A detailed description of the maintenance.
  *               cost:
  *                 type: number
+ *                 description: The cost of the maintenance.
  *               date:
  *                 type: string
  *                 format: date-time
+ *                 description: The date the maintenance was performed.
  *               duration:
  *                 type: number
+ *                 description: The duration of the maintenance in hours.
+ *               carIds:
+ *                 type: array
+ *                 description: A list of IDs of cars associated with the maintenance.
+ *                 items:
+ *                   type: integer
  *     responses:
  *       201:
  *         description: The created maintenance record.
@@ -123,7 +133,28 @@ maintenanceRouter.get('/:id', async (req: Request, res: Response, next: NextFunc
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Maintenance'
+ *       400:
+ *         description: Invalid input or car not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid car ID."
+ *       500:
+ *         description: Database error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Database error. See server log for details."
  */
+
 maintenanceRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const maintenance = <MaintenanceInput>req.body;

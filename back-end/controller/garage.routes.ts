@@ -86,11 +86,11 @@ garageRouter.get('/:id', async (req: Request, res: Response, next: NextFunction)
 
 /**
  * @swagger
- * /cars:
+ * /garages:
  *   post:
  *     security:
  *       - bearerAuth: []
- *     summary: Create a new car.
+ *     summary: Create a new garage.
  *     requestBody:
  *       required: true
  *       content:
@@ -98,23 +98,24 @@ garageRouter.get('/:id', async (req: Request, res: Response, next: NextFunction)
  *           schema:
  *             type: object
  *             properties:
- *               color:
+ *               name:
  *                 type: string
- *               electric:
- *                 type: boolean
- *               brand:
- *                 type: string
- *               garageId:
+ *                 description: The name of the garage.
+ *               size:
  *                 type: integer
+ *                 description: The maximum number of cars the garage can hold.
+ *               place:
+ *                 type: string
+ *                 description: The location of the garage.
  *     responses:
  *       201:
- *         description: The created car.
+ *         description: The created garage.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Car'
+ *               $ref: '#/components/schemas/Garage'
  *       400:
- *         description: Invalid input or garage not found.
+ *         description: Invalid input.
  *         content:
  *           application/json:
  *             schema:
@@ -122,17 +123,7 @@ garageRouter.get('/:id', async (req: Request, res: Response, next: NextFunction)
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Garage with id 1 does not exist."
- *       409:
- *         description: Garage is full.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Garage with id 1 is full."
+ *                   example: "Invalid input data."
  *       500:
  *         description: Database error.
  *         content:
@@ -144,6 +135,7 @@ garageRouter.get('/:id', async (req: Request, res: Response, next: NextFunction)
  *                   type: string
  *                   example: "Database error. See server log for details."
  */
+
 
 garageRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
     try {

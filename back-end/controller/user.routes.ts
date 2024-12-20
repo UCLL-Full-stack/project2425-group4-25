@@ -71,7 +71,7 @@
  *               $ref: '#/components/schemas/Role'
  *      Role:
  *          type: string
- *          enum: [student, lecturer, admin, guest]
+ *          enum: [employee, customer, admin]
  */
 import express, { NextFunction, Request, Response } from 'express';
 import userService from '../service/user.service';
