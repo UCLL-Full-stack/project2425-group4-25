@@ -25,6 +25,7 @@ type MaintenanceInput = {
     cost: number;
     date: Date;
     duration: number; 
+    carIds: number[];
 };
 
 type GarageInput = {

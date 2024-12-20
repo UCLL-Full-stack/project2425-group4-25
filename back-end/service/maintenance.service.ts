@@ -13,10 +13,10 @@ const getMaintenanceById = async (id: number): Promise<Maintenance> => {
 };
 
 const createMaintenance = async (
-    { type, description, cost, date, duration }: MaintenanceInput
+    { type, description, cost, date, duration, carIds }: MaintenanceInput
 ): Promise<Maintenance> => {
     return maintenanceDB.createMaintenance(
-        new Maintenance({ type, description, cost, date, duration, cars: [] })
+        { type, description, cost, date, duration, carIds }
     );
 };
 

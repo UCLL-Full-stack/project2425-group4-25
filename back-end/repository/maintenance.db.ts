@@ -1,7 +1,13 @@
 import database from '../util/database';
 import { Maintenance } from '../model/maintenance';
 
-const createMaintenance = async ({ type, description, cost, date, duration }: Maintenance): Promise<Maintenance> => {
+const createMaintenance = async ({ type, description, cost, date, duration, carIds }:{
+    type: string;
+    description: string;
+    cost: number;
+    date: Date;
+    duration: number;
+    carIds: number[];}): Promise<Maintenance> => {
     try {
         const maintenancePrisma = await database.maintenance.create({
             data: {
@@ -10,11 +16,14 @@ const createMaintenance = async ({ type, description, cost, date, duration }: Ma
                 cost,
                 date,
                 duration,
+                cars: {
+                    create: carIds.map((carId) => ({ carId })),
             },
-            include: {
-                cars: { include: { car: true } },
-            },
-        });
+        },
+        include: {
+            cars: { include: { car: true } },
+        },
+    });
         return Maintenance.from(maintenancePrisma);
     } catch (error) {
         console.error(error);
