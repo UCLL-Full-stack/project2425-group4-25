@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CarInput } from '../../types';
 import GarageService from '../../services/GarageService';
+import UserService from '../../services/UserService';
 
 interface AddCarFormProps {
     onClose: () => void;
@@ -12,7 +13,9 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose, onAdd }) => {
     const [color, setColor] = useState('');
     const [electric, setElectric] = useState(false);
     const [garageId, setGarageId] = useState<number | ''>('');
+    const [userId, setUserId] = useState<number | ''>('');
     const [garages, setGarages] = useState<{ id: number; name: string; size: number; place: string }[]>([]);
+    const [users, setUsers] = useState<{ id: number; username: string }[]>([]);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -26,11 +29,22 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose, onAdd }) => {
             }
         };
 
+        const fetchUsers = async () => {
+            try {
+                const allUsers = await UserService.getUsers();
+                setUsers(allUsers);
+            } catch (err) {
+                console.error('Error fetching users:', err);
+                setError('Failed to fetch users.');
+            }
+        };
+
         fetchGarages();
+        fetchUsers();
     }, []);
 
     const validate = (): boolean => {
-        if (!brand || !color || !garageId) {
+        if (!brand || !color || !garageId || !userId) {
             setError('All fields are required.');
             return false;
         }
@@ -49,6 +63,7 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose, onAdd }) => {
             color,
             electric,
             garageId: Number(garageId),
+            userId: Number(userId),
         };
 
         onAdd(newCar); // Pass the new car data to the parent
@@ -98,6 +113,21 @@ const AddCarForm: React.FC<AddCarFormProps> = ({ onClose, onAdd }) => {
                         {garages.map((garage) => (
                             <option key={garage.id} value={garage.id}>
                                 {`${garage.name} - Size: ${garage.size} - Place: ${garage.place}`}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-300 mb-2">User</label>
+                    <select
+                        value={userId}
+                        onChange={(e) => setUserId(Number(e.target.value))}
+                        className="w-full p-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">Select a User</option>
+                        {users.map((user) => (
+                            <option key={user.id} value={user.id}>
+                                {user.username}
                             </option>
                         ))}
                     </select>

@@ -24,7 +24,7 @@ const GarageOverviewTable: React.FC<GarageOverviewTableProps> = ({ garages, onDe
 
         try {
             await GarageService.deleteGarage(String(garageId)); // Call the delete API
-            onDelete(garageId); // Notify parent to update the list
+            window.location.reload(); // Reload the page
         } catch (error) {
             console.error('Error deleting garage:', error);
             alert('Failed to delete the garage. Please try again.');

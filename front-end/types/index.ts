@@ -40,6 +40,7 @@ export type CarInput = {
     electric: boolean;
     brand: string;
     garageId?: number; // Associated garage
+    userId?: number; // Associated user
 };
 
 export type User = {
