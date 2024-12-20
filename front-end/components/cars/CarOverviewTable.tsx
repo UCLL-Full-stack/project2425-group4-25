@@ -24,7 +24,7 @@ const CarOverviewTable: React.FC<CarOverviewTableProps> = ({ cars, onDelete }) =
 
         try {
             await CarService.deleteCar(String(carId)); // Call the delete API
-            onDelete(carId); // Notify parent to update the list
+            window.location.reload(); // Reload the page
         } catch (error) {
             console.error('Error deleting car:', error);
             alert('Failed to delete the car. Please try again.');
