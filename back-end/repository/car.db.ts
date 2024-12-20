@@ -2,7 +2,7 @@ import database from '../util/database';
 import { Car } from '../model/car';
 import { CarInput } from '../types';
 
-const createCar = async ({ color, electric, brand, garageId }: CarInput): Promise<Car> => {
+const createCar = async ({ color, electric, brand, garageId, userId }: CarInput): Promise<Car> => {
     try {
         const carPrisma = await database.car.create({
             data: {
@@ -12,11 +12,15 @@ const createCar = async ({ color, electric, brand, garageId }: CarInput): Promis
                 garage: {
                     connect: { id: garageId },
                 },
+                user: {
+                    connect: { id: userId },
+                },
             },
             include: {
                 maintenances: {
                     include: { maintenance: true },
                 },
+                user: true,
             },
         });
         return Car.from(carPrisma);
