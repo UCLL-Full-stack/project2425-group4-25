@@ -44,15 +44,21 @@ const MaintenancesPage: React.FC = () => {
     const handleAddMaintenance = async (newMaintenance: MaintenanceInput) => {
         try {
             const addedMaintenance = await MaintenanceService.addMaintenance(newMaintenance);
-
-            // Update SWR cache directly to prevent re-fetching and duplicates
-            mutate((cachedMaintenances: any) => [...(cachedMaintenances || []), addedMaintenance], false);
-
+    
+            // Update SWR cache safely to prevent duplicates
+            mutate((cachedMaintenances: MaintenanceInput[] | undefined) => {
+                if (cachedMaintenances) {
+                    return [...cachedMaintenances, addedMaintenance];
+                }
+                return [addedMaintenance];
+            }, false);
+    
             setIsFormVisible(false); // Close the form
         } catch (error) {
             console.error("Error adding maintenance:", error);
         }
     };
+    
 
     if (error) {
         return <div className="text-red-500">Failed to load maintenances.</div>;

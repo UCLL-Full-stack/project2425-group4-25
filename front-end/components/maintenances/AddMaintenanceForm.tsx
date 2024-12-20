@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import MaintenanceService from "../../services/MaintenanceService";
 import CarService from "../../services/CarService";
 import { MaintenanceInput } from "../../types";
 
@@ -32,30 +31,32 @@ const AddMaintenanceForm: React.FC<AddMaintenanceFormProps> = ({ onClose, onAdd 
         fetchCars();
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const validate = (): boolean => {
         if (!type || !description || !cost || !date || !duration || !carId) {
             setError("All fields are required.");
+            return false;
+        }
+        setError(null);
+        return true;
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!validate()) {
             return;
         }
 
-        try {
-            const newMaintenance: MaintenanceInput = {
-                type,
-                description,
-                cost: Number(cost),
-                date,
-                duration: Number(duration),
-                carId: Number(carId),
-            };
+        const newMaintenance: MaintenanceInput = {
+            type,
+            description,
+            cost: Number(cost),
+            date,
+            duration: Number(duration),
+            carId: Number(carId),
+        };
 
-            const addedMaintenance = await MaintenanceService.addMaintenance(newMaintenance);
-            onAdd(addedMaintenance);
-            onClose();
-        } catch (err) {
-            console.error("Error adding maintenance:", err);
-            setError("Failed to add maintenance. Please try again.");
-        }
+        onAdd(newMaintenance); // Pass the new maintenance data to the parent
+        onClose(); // Close the form
     };
 
     return (
